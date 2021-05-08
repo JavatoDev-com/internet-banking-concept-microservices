@@ -49,4 +49,3 @@ Article series
 <h3 align="center">A Passionate Java Fullstack Developer from Sri Lanka and Author of JavatoDev.com</h3>
 
 <p align="left"> <a href="https://twitter.com/spbootdeveloper" target="blank"><img src="https://img.shields.io/twitter/follow/spbootdeveloper?logo=twitter&style=for-the-badge" alt="spbootdeveloper" /></a> </p>
-<p align="left"> <a href="https://www.linkedin.com/in/chinthakadinadasa/" target="blank"><img src="https://img.shields.io/linkedin/follow/chinthakadinadasa?logo=linkedin&style=for-the-badge" alt="spbootdeveloper" /></a> </p>
