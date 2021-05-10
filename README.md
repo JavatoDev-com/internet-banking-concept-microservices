@@ -42,6 +42,7 @@ alt="Spring Boot Pagination, Sorting and Filtering"/></a>
 Article series 
 
 [1. Building Microservices With Spring Boot – Free Course With Practical Project](https://javatodev.com/building-microservices-with-spring-boot-free-course-with-practical-project/)
+[2. Microservices – Service Registration and Discovery With Spring Cloud Netflix Eureka](https://javatodev.com/microservices-service-registration-and-discovery-with-spring-cloud-netflix-eureka/)
 
 #### Author
 
