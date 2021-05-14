@@ -45,6 +45,8 @@ Article series
 
 [2. Microservices – Service Registration and Discovery With Spring Cloud Netflix Eureka](https://javatodev.com/microservices-service-registration-and-discovery-with-spring-cloud-netflix-eureka/)
 
+[3. Microservices – Setup API Gateway Using Spring Cloud Gateway](https://javatodev.com/microservices-setup-api-gateway-using-spring-cloud-gateway/)
+
 #### Author
 
 <h1 align="center">Hi 👋, I'm Chinthaka Dinadasa</h1>
