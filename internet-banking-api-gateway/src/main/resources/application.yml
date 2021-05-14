@@ -2,10 +2,29 @@ spring:
   application:
     name: internet-banking-api-gateway
 
+  ##GATEWAY CONFIGURATIONS
+  cloud:
+    gateway:
+      routes:
+        ## USER SERVICE
+        - id: internet-banking-user-service
+          uri: lb://internet-banking-user-service
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+        ## FUND TRANSFER SERVICE
+        - id: internet-banking-fund-transfer-service
+          uri: lb://internet-banking-fund-transfer-service
+          predicates:
+            - Path=/fund-transfer/**
+          filters:
+            - StripPrefix=1
+
 server:
   port: 8082
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8081/eureka=
+      defaultZone: http://localhost:8081/eureka

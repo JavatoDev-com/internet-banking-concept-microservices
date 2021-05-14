@@ -1,0 +1,5 @@
+### CHECK USER SERVICE INFO
+GET http://localhost:8082/user/actuator/info
+
+### CHECK FUND TRANSFER INFO
+GET http://localhost:8082/fund-transfer/actuator/info

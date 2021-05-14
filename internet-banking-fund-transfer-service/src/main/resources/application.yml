@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: internet-banking-fund-transfer-service
+
+server:
+  port: 8084
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+
+info:
+  app:
+    name: ${spring.application.name}
