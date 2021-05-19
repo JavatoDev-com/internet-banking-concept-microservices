@@ -32,7 +32,7 @@ spring:
       routes:
         ## USER SERVICE
         - id: internet-banking-user-service
-          uri: lb://internet-banking-user-service
+          uri: lb://banking-core-user-service
           predicates:
             - Path=/user/**
           filters:
@@ -59,4 +59,9 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8081/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
 
