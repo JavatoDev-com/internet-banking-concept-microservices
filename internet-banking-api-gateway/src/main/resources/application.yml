@@ -44,6 +44,13 @@ spring:
             - Path=/fund-transfer/**
           filters:
             - StripPrefix=1
+        ## CORE BANKING SERVICE
+        - id: core-banking-service
+          uri: lb://core-banking-service
+          predicates:
+            - Path=/banking-core/**
+          filters:
+            - StripPrefix=1
 
 ## SECURITY BASED CONFIGURATIONS
 app:
