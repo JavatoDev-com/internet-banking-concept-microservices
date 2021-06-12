@@ -52,6 +52,9 @@ Article series
 
 [5. Microservices – Core Banking Service Implementation](https://javatodev.com/microservices-core-banking-service-implementation/)
 
+[6. Microservices – User Service Implementation](https://javatodev.com/microservices-user-service-implementation/)
+
+
 #### Author
 
 <h1 align="center">Hi 👋, I'm Chinthaka Dinadasa</h1>
