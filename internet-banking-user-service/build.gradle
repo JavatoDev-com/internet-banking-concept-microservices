@@ -21,9 +21,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation ('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client') {
+        exclude group: 'javax.ws.rs', module: 'jsr311-api'
+    }
     implementation 'org.keycloak:keycloak-admin-client:12.0.4'
-    implementation 'com.github.javatodev-banking-core:banking-core-common:1.0.8'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

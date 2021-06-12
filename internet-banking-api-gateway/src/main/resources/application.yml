@@ -32,7 +32,7 @@ spring:
       routes:
         ## USER SERVICE
         - id: internet-banking-user-service
-          uri: lb://banking-core-user-service
+          uri: lb://internet-banking-user-service
           predicates:
             - Path=/user/**
           filters:
@@ -72,3 +72,7 @@ eureka:
     hostname: localhost
     prefer-ip-address: true
 
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG

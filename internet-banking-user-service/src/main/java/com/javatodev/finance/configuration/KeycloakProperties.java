@@ -1,4 +1,4 @@
-package com.javatodev.finance.config;
+package com.javatodev.finance.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class KeycloakProperties {
-
     @Value("${app.config.keycloak.server-url}")
     private String serverUrl;
 
@@ -42,5 +41,4 @@ public class KeycloakProperties {
     public String getRealm() {
         return realm;
     }
-
 }

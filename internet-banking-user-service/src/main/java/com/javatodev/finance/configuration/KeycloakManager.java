@@ -1,4 +1,4 @@
-package com.javatodev.finance.config;
+package com.javatodev.finance.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class KeyCloakManager {
+public class KeycloakManager {
 
     private final KeycloakProperties keycloakProperties;
 

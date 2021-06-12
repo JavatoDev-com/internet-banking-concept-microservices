@@ -1,6 +1,13 @@
 spring:
   application:
     name: internet-banking-user-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/banking_core_user_service
+    username: root
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 server:
   port: 8083
@@ -13,3 +20,11 @@ eureka:
 info:
   app:
     name: ${spring.application.name}
+
+app:
+  config:
+    keycloak:
+      server-url: http://localhost:8080/auth
+      realm: javatodev-internet-banking
+      clientId: internet-banking-api-client
+      client-secret: e8548d56-d743-45ef-8655-063c9cd96759
