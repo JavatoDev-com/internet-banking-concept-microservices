@@ -6,7 +6,7 @@ In this article series I’m going to explain using internet banking API concept
 
 ### Microservices Inside This Project
 
-Here this project consist of mainly 6 microservice and those are,
+Here this project consist of mainly 6 microservices and those are,
 
 - User service (banking-core-user-service) – This service includes all the operations under the User such as registrations and retrieval. Additionally, this API consumes keycloak REST API to register and manage the user base while using the local PostgreSQL database as well.
 - Fund transfer service (banking-core-fund-transfer-service) – This is the service that handles all the fund transfers between accounts and this API will push messages to a centralized RabbitMQ queue to use from the Notification service.
@@ -17,8 +17,8 @@ Here this project consist of mainly 6 microservice and those are,
 ### Base Project Architecture
 
 <a href="#" target="blank">
-    <img align="center" src="./Microservices_Article_Banking_Core_Concept.jpg" 
-alt="Spring Boot Pagination, Sorting and Filtering"/></a>
+    <img align="center" src="https://javatodev.com/wp-content/uploads/2021/05/Microservices-Article-Banking-Core-Concept-1024x870.png" 
+alt="Spring Boot Microservices Project Architecture By Javatodev.com"/></a>
 
 ### Technology Stack
 
@@ -54,6 +54,7 @@ Article series
 
 [6. Microservices – User Service Implementation](https://javatodev.com/microservices-user-service-implementation/)
 
+[6. Microservices – Fund Transfer Service Implementation](https://javatodev.com/microservices-fund-transfer-service-implementation/)
 
 #### Author
 
