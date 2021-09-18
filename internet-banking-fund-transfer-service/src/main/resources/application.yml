@@ -1,9 +1,16 @@
+server:
+  port: 8084
+
 spring:
   application:
     name: internet-banking-fund-transfer-service
-
-server:
-  port: 8084
+  datasource:
+    url: jdbc:mysql://localhost:3306/banking_core_fund_transfer_service
+    username: root
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 eureka:
   client:
