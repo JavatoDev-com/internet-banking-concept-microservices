@@ -54,7 +54,9 @@ Article series
 
 [6. Microservices – User Service Implementation](https://javatodev.com/microservices-user-service-implementation/)
 
-[6. Microservices – Fund Transfer Service Implementation](https://javatodev.com/microservices-fund-transfer-service-implementation/)
+[7. Microservices – Fund Transfer Service Implementation](https://javatodev.com/microservices-fund-transfer-service-implementation/)
+
+[8. Microservices – Utility Payment Service Implementation](https://javatodev.com/microservices-utility-payment-service-implementation/)
 
 #### Author
 
