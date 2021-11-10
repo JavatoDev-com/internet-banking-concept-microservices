@@ -17,8 +17,8 @@ spring:
         registration:
           internet-banking-core-client:
             authorization-grant-type: authorization_code
-            client-id: internet-banking-core-client
-            client-secret: 5d0b7186-74b0-47fc-ae04-a5de436376b9
+            client-id: ${app.config.keycloak.client-id}
+            client-secret: ${app.config.keycloak.client-secret}
             provider: keycloak
             redirect-uri: http://localhost:8080/login/oauth2/code/keycloak
             scope: openid
@@ -58,6 +58,8 @@ app:
     keycloak:
       url: http://localhost:8080/auth
       realm: javatodev-internet-banking
+      client-secret: 5d0b7186-74b0-47fc-ae04-a5de436376b9
+      client-id: internet-banking-core-client
 
 server:
   port: 8082
