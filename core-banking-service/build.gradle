@@ -21,7 +21,7 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "2020.0.3-SNAPSHOT")
+    set('springCloudVersion', "2020.0.4")
 }
 
 dependencies {
@@ -35,6 +35,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation 'org.modelmapper:modelmapper:2.4.3'
+
+    implementation 'org.flywaydb:flyway-core:8.0.3'
+
 
     runtimeOnly 'mysql:mysql-connector-java'
 
