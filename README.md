@@ -1,4 +1,4 @@
-![application workflow](https://github.com/javatodev/internet-banking-concept-microservices/actions/workflows/gradle/badge.svg)
+![example workflow](https://github.com/javatodev/internet-banking-concept-microservices/actions/workflows/gradle/badge.svg)
 
 # Internet Banking Concept With Java Spring Boot Microservices
 
