@@ -24,15 +24,19 @@ jobs:
         cache: gradle
     - name: Building core-banking-service
       working-directory: ./core-banking-service
-      run: ./gradlew build -x test
+      run: ./gradlew build
 
     - name: Building internet-banking-fund-transfer-service
       working-directory: ./internet-banking-fund-transfer-service
-      run: ./gradlew build -x test
+      run: ./gradlew build
 
     - name: Building internet-banking-user-service
       working-directory: ./internet-banking-user-service
-      run: ./gradlew build -x test
+      run: ./gradlew build
+
+    - name: Building internet-banking-utility-payment-service
+      working-directory: ./internet-banking-utility-payment-service
+      run: ./gradlew build
 
     - name: Building internet-banking-service-registry
       working-directory: ./internet-banking-service-registry
@@ -40,8 +44,4 @@ jobs:
 
     - name: Building internet-banking-api-gateway
       working-directory: ./internet-banking-api-gateway
-      run: ./gradlew build -x test
-
-    - name: Building internet-banking-utility-payment-service
-      working-directory: ./internet-banking-utility-payment-service
       run: ./gradlew build -x test
