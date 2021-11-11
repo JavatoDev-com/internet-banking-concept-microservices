@@ -1,3 +1,5 @@
+![example workflow](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+
 # Internet Banking Concept With Java Spring Boot Microservices
 
 This source code was developed for Java based microservices tutorial series from [javatodev.com](https://javatodev.com).
