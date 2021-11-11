@@ -22,6 +22,10 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-    - name: Build with Gradle
+    - name: Building core-banking-service
       working-directory: ./core-banking-service
+      run: ./gradlew build -x test
+
+    - name: Building internet-banking-fund-transfer-service
+      working-directory: ./internet-banking-fund-transfer-service
       run: ./gradlew build -x test
