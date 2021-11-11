@@ -2,13 +2,17 @@ spring:
   application:
     name: core-banking-service
   datasource:
-    url: jdbc:mysql://localhost:3306/banking_core_services
+    url: jdbc:h2:mem:banking_core_service
     username: root
     password: password
+    driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialect
 
+  flyway:
+    enabled: false
 server:
   port: 8092
 
