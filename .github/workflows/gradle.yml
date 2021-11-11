@@ -23,6 +23,8 @@ jobs:
         distribution: 'adopt'
         cache: gradle
     - name: Grant execute permission for gradlew
+      working-directory: ./core-banking-service
       run: chmod +x gradlew
     - name: Build with Gradle
+      working-directory: ./core-banking-service
       run: ./gradlew build
