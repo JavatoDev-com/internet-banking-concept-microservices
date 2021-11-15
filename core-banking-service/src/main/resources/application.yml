@@ -2,7 +2,7 @@ spring:
   application:
     name: core-banking-service
   datasource:
-    url: jdbc:mysql://localhost:3306/banking_core_services
+    url: jdbc:mysql://localhost:3306/banking_core_service
     username: root
     password: password
   jpa:
