@@ -27,4 +27,7 @@ app:
       server-url: http://localhost:8080/auth
       realm: javatodev-internet-banking
       clientId: internet-banking-api-client
-      client-secret: e8548d56-d743-45ef-8655-063c9cd96759
+      client-secret: dd3fe18f-2843-4a6d-a815-4808e710a98a
+  feign:
+    client:
+      core-banking: core-banking-service

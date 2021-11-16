@@ -1,11 +1,16 @@
 package com.javatodev.finance.service;
 
+import com.javatodev.finance.exception.GlobalErrorCode;
+import com.javatodev.finance.exception.InvalidBankingUserException;
+import com.javatodev.finance.exception.InvalidEmailException;
 import com.javatodev.finance.model.dto.Status;
 import com.javatodev.finance.model.dto.User;
 import com.javatodev.finance.model.dto.UserUpdateRequest;
 import com.javatodev.finance.model.entity.UserEntity;
 import com.javatodev.finance.model.mapper.UserMapper;
 import com.javatodev.finance.model.repository.UserRepository;
+import com.javatodev.finance.model.rest.response.UserResponse;
+import com.javatodev.finance.service.rest.BankingCoreRestClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -17,7 +22,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -25,6 +29,7 @@ import java.util.UUID;
 public class UserService {
     private final KeycloakUserService keycloakUserService;
     private final UserRepository userRepository;
+    private final BankingCoreRestClient bankingCoreRestClient;
 
     private UserMapper userMapper = new UserMapper();
 
@@ -35,31 +40,41 @@ public class UserService {
             throw new RuntimeException("This email already registered as a user. Please check and retry.");
         }
 
-        UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setEmail(user.getEmail());
-        userRepresentation.setEmailVerified(false);
-        userRepresentation.setEnabled(false);
-        userRepresentation.setUsername(user.getEmail());
+        UserResponse userResponse = bankingCoreRestClient.readUser(user.getIdentification());
 
-        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-        credentialRepresentation.setValue(user.getPassword());
-        credentialRepresentation.setTemporary(false);
-        userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
+        if (userResponse.getId() != null) {
 
-        Integer userCreationResponse = keycloakUserService.createUser(userRepresentation);
+            if (!userResponse.getEmail().equals(user.getEmail())) {
+                throw new InvalidEmailException("Incorrect email. Please check and retry.", GlobalErrorCode.ERROR_INVALID_EMAIL);
+            }
 
-        if (userCreationResponse == 201) {
-            log.info("User created under given username {}", user.getEmail());
+            UserRepresentation userRepresentation = new UserRepresentation();
+            userRepresentation.setEmail(userResponse.getEmail());
+            userRepresentation.setEmailVerified(false);
+            userRepresentation.setEnabled(false);
+            userRepresentation.setUsername(userResponse.getEmail());
 
-            List<UserRepresentation> userRepresentations1 = keycloakUserService.readUserByEmail(user.getEmail());
-            user.setAuthId(userRepresentations1.get(0).getId());
-            user.setStatus(Status.PENDING);
-            user.setIdentification(UUID.randomUUID().toString());
-            UserEntity save = userRepository.save(userMapper.convertToEntity(user));
-            return userMapper.convertToDto(save);
+            CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+            credentialRepresentation.setValue(user.getPassword());
+            credentialRepresentation.setTemporary(false);
+            userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
+
+            Integer userCreationResponse = keycloakUserService.createUser(userRepresentation);
+
+            if (userCreationResponse == 201) {
+                log.info("User created under given username {}", user.getEmail());
+
+                List<UserRepresentation> userRepresentations1 = keycloakUserService.readUserByEmail(user.getEmail());
+                user.setAuthId(userRepresentations1.get(0).getId());
+                user.setStatus(Status.PENDING);
+                user.setIdentification(userResponse.getIdentificationNumber());
+                UserEntity save = userRepository.save(userMapper.convertToEntity(user));
+                return userMapper.convertToDto(save);
+            }
+
         }
 
-        throw new RuntimeException("We couldn't find user under given identification. Please check and retry");
+        throw new InvalidBankingUserException("We couldn't find user under given identification. Please check and retry", GlobalErrorCode.ERROR_USER_NOT_FOUND_UNDER_NIC);
 
     }
 
