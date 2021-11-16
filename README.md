@@ -60,6 +60,8 @@ Article series
 
 [8. Microservices – Utility Payment Service Implementation](https://javatodev.com/microservices-utility-payment-service-implementation/)
 
+[9. Microservices – Communication With Spring Cloud OpenFeign](https://javatodev.com/microservices-communication-with-spring-cloud-openfeign/)
+
 #### Author
 
 <h1 align="center">Hi 👋, I'm Chinthaka Dinadasa</h1>
