@@ -7,6 +7,7 @@ import com.javatodev.finance.model.dto.response.FundTransferResponse;
 import com.javatodev.finance.model.entity.FundTransferEntity;
 import com.javatodev.finance.model.mapper.FundTransferMapper;
 import com.javatodev.finance.model.repository.FundTransferRepository;
+import com.javatodev.finance.service.rest.client.BankingCoreFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ import java.util.UUID;
 public class FundTransferService {
 
     private final FundTransferRepository fundTransferRepository;
+    private final BankingCoreFeignClient bankingCoreFeignClient;
 
     private FundTransferMapper mapper = new FundTransferMapper();
 
@@ -33,10 +34,12 @@ public class FundTransferService {
         entity.setStatus(TransactionStatus.PENDING);
         FundTransferEntity optFundTransfer = fundTransferRepository.save(entity);
 
-        FundTransferResponse fundTransferResponse = new FundTransferResponse();
-        fundTransferResponse.setTransactionId(UUID.randomUUID().toString());
-        fundTransferResponse.setMessage("Success");
+        FundTransferResponse fundTransferResponse = bankingCoreFeignClient.fundTransfer(request);
+        optFundTransfer.setTransactionReference(fundTransferResponse.getTransactionId());
+        optFundTransfer.setStatus(TransactionStatus.SUCCESS);
+        fundTransferRepository.save(optFundTransfer);
 
+        fundTransferResponse.setMessage("Fund Transfer Successfully Completed");
         return fundTransferResponse;
 
     }
