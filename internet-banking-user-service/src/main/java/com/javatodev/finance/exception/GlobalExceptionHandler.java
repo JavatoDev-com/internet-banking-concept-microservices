@@ -11,7 +11,7 @@ import java.util.Locale;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SimpleBankingGlobalException.class)
-    protected ResponseEntity handleGlobalException(SimpleBankingGlobalException simpleBankingGlobalException, Locale locale) {
+    protected ResponseEntity handleGlobalException (SimpleBankingGlobalException simpleBankingGlobalException, Locale locale) {
         return ResponseEntity
                 .badRequest()
                 .body(ErrorResponse.builder()
