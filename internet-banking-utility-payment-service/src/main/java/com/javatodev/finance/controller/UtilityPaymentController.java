@@ -1,6 +1,6 @@
 package com.javatodev.finance.controller;
 
-import com.javatodev.finance.rest.request.UtilityPaymentRequest;
+import com.javatodev.finance.model.rest.request.UtilityPaymentRequest;
 import com.javatodev.finance.service.UtilityPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
