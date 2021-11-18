@@ -1,5 +1,6 @@
 package com.javatodev.finance.service;
 
+import com.javatodev.finance.exception.EntityNotFoundException;
 import com.javatodev.finance.model.dto.BankAccount;
 import com.javatodev.finance.model.dto.UtilityAccount;
 import com.javatodev.finance.model.entity.BankAccountEntity;
@@ -22,17 +23,17 @@ public class AccountService {
     private final UtilityAccountRepository utilityAccountRepository;
 
     public BankAccount readBankAccount(String accountNumber) {
-        BankAccountEntity entity = bankAccountRepository.findByNumber(accountNumber).get();
+        BankAccountEntity entity = bankAccountRepository.findByNumber(accountNumber).orElseThrow(EntityNotFoundException::new);
         return bankAccountMapper.convertToDto(entity);
     }
 
     public UtilityAccount readUtilityAccount(String provider) {
-        UtilityAccountEntity utilityAccountEntity = utilityAccountRepository.findByProviderName(provider).get();
+        UtilityAccountEntity utilityAccountEntity = utilityAccountRepository.findByProviderName(provider).orElseThrow(EntityNotFoundException::new);
         return utilityAccountMapper.convertToDto(utilityAccountEntity);
     }
 
     public UtilityAccount readUtilityAccount(Long id){
-        return utilityAccountMapper.convertToDto(utilityAccountRepository.findById(id).get());
+        return utilityAccountMapper.convertToDto(utilityAccountRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
 }
