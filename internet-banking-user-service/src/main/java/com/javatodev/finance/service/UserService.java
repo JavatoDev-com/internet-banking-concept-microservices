@@ -1,8 +1,5 @@
 package com.javatodev.finance.service;
 
-import com.javatodev.finance.exception.GlobalErrorCode;
-import com.javatodev.finance.exception.InvalidBankingUserException;
-import com.javatodev.finance.exception.InvalidEmailException;
 import com.javatodev.finance.model.dto.Status;
 import com.javatodev.finance.model.dto.User;
 import com.javatodev.finance.model.dto.UserUpdateRequest;
@@ -45,7 +42,7 @@ public class UserService {
         if (userResponse.getId() != null) {
 
             if (!userResponse.getEmail().equals(user.getEmail())) {
-                throw new InvalidEmailException("Incorrect email. Please check and retry.", GlobalErrorCode.ERROR_INVALID_EMAIL);
+                throw new RuntimeException("Incorrect email. Please check and retry.");
             }
 
             UserRepresentation userRepresentation = new UserRepresentation();
@@ -74,7 +71,7 @@ public class UserService {
 
         }
 
-        throw new InvalidBankingUserException("We couldn't find user under given identification. Please check and retry", GlobalErrorCode.ERROR_USER_NOT_FOUND_UNDER_NIC);
+        throw new RuntimeException("We couldn't find user under given identification. Please check and retry");
 
     }
 
