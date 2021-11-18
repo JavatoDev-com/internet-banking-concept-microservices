@@ -1,5 +1,6 @@
 package com.javatodev.finance.service;
 
+import com.javatodev.finance.exception.*;
 import com.javatodev.finance.model.dto.Status;
 import com.javatodev.finance.model.dto.User;
 import com.javatodev.finance.model.dto.UserUpdateRequest;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class UserService {
 
         List<UserRepresentation> userRepresentations = keycloakUserService.readUserByEmail(user.getEmail());
         if (userRepresentations.size() > 0) {
-            throw new RuntimeException("This email already registered as a user. Please check and retry.");
+            throw new UserAlreadyRegisteredException("This email already registered as a user. Please check and retry.", GlobalErrorCode.ERROR_EMAIL_REGISTERED);
         }
 
         UserResponse userResponse = bankingCoreRestClient.readUser(user.getIdentification());
@@ -42,7 +42,7 @@ public class UserService {
         if (userResponse.getId() != null) {
 
             if (!userResponse.getEmail().equals(user.getEmail())) {
-                throw new RuntimeException("Incorrect email. Please check and retry.");
+                throw new InvalidEmailException("Incorrect email. Please check and retry.", GlobalErrorCode.ERROR_INVALID_EMAIL);
             }
 
             UserRepresentation userRepresentation = new UserRepresentation();
@@ -71,7 +71,7 @@ public class UserService {
 
         }
 
-        throw new RuntimeException("We couldn't find user under given identification. Please check and retry");
+        throw new InvalidBankingUserException("We couldn't find user under given identification. Please check and retry", GlobalErrorCode.ERROR_USER_NOT_FOUND_UNDER_NIC);
 
     }
 

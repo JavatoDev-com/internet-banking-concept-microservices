@@ -1,5 +1,8 @@
 package com.javatodev.finance.service;
 
+import com.javatodev.finance.exception.EntityNotFoundException;
+import com.javatodev.finance.exception.GlobalErrorCode;
+import com.javatodev.finance.exception.InsufficientFundsException;
 import com.javatodev.finance.model.TransactionType;
 import com.javatodev.finance.model.dto.BankAccount;
 import com.javatodev.finance.model.dto.UtilityAccount;
@@ -71,7 +74,7 @@ public class TransactionService {
 
     private void validateBalance(BankAccount bankAccount, BigDecimal amount) {
         if (bankAccount.getActualBalance().compareTo(BigDecimal.ZERO) < 0 || bankAccount.getActualBalance().compareTo(amount) < 0) {
-            throw new RuntimeException();
+            throw new InsufficientFundsException("Insufficient funds in the account " + bankAccount.getNumber(), GlobalErrorCode.INSUFFICIENT_FUNDS);
         }
     }
 
@@ -79,8 +82,8 @@ public class TransactionService {
 
         String transactionId = UUID.randomUUID().toString();
 
-        BankAccountEntity fromBankAccountEntity = bankAccountRepository.findByNumber(fromBankAccount.getNumber()).get();
-        BankAccountEntity toBankAccountEntity = bankAccountRepository.findByNumber(toBankAccount.getNumber()).get();
+        BankAccountEntity fromBankAccountEntity = bankAccountRepository.findByNumber(fromBankAccount.getNumber()).orElseThrow(EntityNotFoundException::new);
+        BankAccountEntity toBankAccountEntity = bankAccountRepository.findByNumber(toBankAccount.getNumber()).orElseThrow(EntityNotFoundException::new);
 
         fromBankAccountEntity.setActualBalance(fromBankAccountEntity.getActualBalance().subtract(amount));
         fromBankAccountEntity.setAvailableBalance(fromBankAccountEntity.getActualBalance().subtract(amount));

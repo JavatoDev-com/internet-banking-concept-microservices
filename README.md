@@ -62,6 +62,8 @@ Article series
 
 [9. Microservices – Communication With Spring Cloud OpenFeign](https://javatodev.com/microservices-communication-with-spring-cloud-openfeign/)
 
+[9. Microservices – Exception Handling](https://javatodev.com/microservices-exception-handling/)
+
 #### Author
 
 <h1 align="center">Hi 👋, I'm Chinthaka Dinadasa</h1>
