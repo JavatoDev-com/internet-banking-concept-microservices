@@ -62,9 +62,9 @@ Article series
 
 [9. Microservices – Communication With Spring Cloud OpenFeign](https://javatodev.com/microservices-communication-with-spring-cloud-openfeign/)
 
-[9. Microservices – Exception Handling](https://javatodev.com/microservices-exception-handling/)
+[10. Microservices – Exception Handling](https://javatodev.com/microservices-exception-handling/)
 
-[10. Microservices – Centralized Configurations With Spring Cloud Config](https://javatodev.com/microservices-centralized-configurations-with-spring-cloud-config/)
+[11. Microservices – Centralized Configurations With Spring Cloud Config](https://javatodev.com/microservices-centralized-configurations-with-spring-cloud-config/)
 
 #### Author
 
