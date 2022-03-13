@@ -64,6 +64,8 @@ Article series
 
 [9. Microservices – Exception Handling](https://javatodev.com/microservices-exception-handling/)
 
+[10. Microservices – Centralized Configurations With Spring Cloud Config](https://javatodev.com/microservices-centralized-configurations-with-spring-cloud-config/)
+
 #### Author
 
 <h1 align="center">Hi 👋, I'm Chinthaka Dinadasa</h1>
