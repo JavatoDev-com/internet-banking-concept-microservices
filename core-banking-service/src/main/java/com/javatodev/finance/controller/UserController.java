@@ -26,9 +26,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity readUser(@RequestHeader("X-Auth-Id") String authId, Pageable pageable) {
-        log.info("Requesting as user {}", authId);
-        return ResponseEntity.ok(messageSource.getMessage("hello.message", null, LocaleContextHolder.getLocale()));
+    public ResponseEntity readUsers(Pageable pageable) {
+        return ResponseEntity.ok(userService.readUsers(pageable));
     }
 
 }

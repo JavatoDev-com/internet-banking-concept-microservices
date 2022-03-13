@@ -1,4 +1,4 @@
-package com.javatodev.finance.rest.request;
+package com.javatodev.finance.model.rest.request;
 
 import lombok.Data;
 

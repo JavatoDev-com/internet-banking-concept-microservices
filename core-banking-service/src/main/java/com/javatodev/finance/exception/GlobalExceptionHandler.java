@@ -11,10 +11,13 @@ import java.util.Locale;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SimpleBankingGlobalException.class)
-    protected ResponseEntity handleGlobalException(SimpleBankingGlobalException e, Locale locale) {
+    protected ResponseEntity handleGlobalException(SimpleBankingGlobalException simpleBankingGlobalException, Locale locale) {
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResponse(e.getCode(), e.getMessage()));
+                .body(ErrorResponse.builder()
+                        .code(simpleBankingGlobalException.getCode())
+                        .message(simpleBankingGlobalException.getMessage())
+                        .build());
     }
 
     @ExceptionHandler({Exception.class})
@@ -23,4 +26,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .badRequest()
                 .body("Exception occur inside API " + e);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.javatodev.finance.rest.response;
+package com.javatodev.finance.model.rest.response;
 
 import lombok.Builder;
 import lombok.Data;

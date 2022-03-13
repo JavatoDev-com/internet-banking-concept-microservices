@@ -14,15 +14,15 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class CustomFeignErrorDecoder implements ErrorDecoder {
-
     @Override
     public Exception decode(String methodKey, Response response) {
 
+        SimpleBankingGlobalException simpleBankingGlobalException = extractBankingCoreGlobalException(response);
+
         switch (response.status()) {
             case 400:
-                SimpleBankingGlobalException bankingCoreGlobalException = extractSimpleBankingGlobalException(response);
-                log.error("Error in request went through feign client {} ", bankingCoreGlobalException.getMessage() + " - " + bankingCoreGlobalException.getCode());
-                return bankingCoreGlobalException;
+                log.error("Error in request went through feign client {} ", simpleBankingGlobalException.getMessage() + " - " + simpleBankingGlobalException.getCode());
+                return simpleBankingGlobalException;
             case 401:
                 log.error("Unauthorized Request Through Feign");
                 return new Exception("Unauthorized Request Through Feign");
@@ -36,7 +36,7 @@ public class CustomFeignErrorDecoder implements ErrorDecoder {
 
     }
 
-    private SimpleBankingGlobalException extractSimpleBankingGlobalException(Response response) {
+    private SimpleBankingGlobalException extractBankingCoreGlobalException(Response response) {
         SimpleBankingGlobalException exceptionMessage = null;
         Reader reader = null;
         //capturing error message from response body.
