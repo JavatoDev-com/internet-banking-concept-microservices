@@ -3,31 +3,27 @@ package com.javatodev.finance.configuration;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import reactor.core.publisher.Mono;
+
+import java.security.Principal;
 
 @Configuration
 public class GatewayConfiguration {
 
-    //setting auth-id for API requests.
+    private static final String HTTP_HEADER_AUTH_USER_ID = "X-Auth-Id";
+    private static final String UNAUTHORIZED_USER_NAME = "SYSTEM USER";
 
     @Bean
     public GlobalFilter customGlobalFilter() {
-        return ((exchange, chain) -> exchange.getPrincipal().map(principal -> {
-            String userName = "";
-
-            if (principal instanceof JwtAuthenticationToken) {
-                //Get username from Principal
-                userName = principal.getName();
-            }
+        return (exchange, chain) -> exchange.getPrincipal().map(Principal::getName).defaultIfEmpty(UNAUTHORIZED_USER_NAME).map(principal -> {
             // adds header to proxied request
             exchange.getRequest().mutate()
-                    .header("X-Auth-Id", userName)
+                    .header(HTTP_HEADER_AUTH_USER_ID, principal)
                     .build();
             return exchange;
         }).flatMap(chain::filter).then(Mono.fromRunnable(() -> {
 
-        })));
+        }));
     }
 
 }
