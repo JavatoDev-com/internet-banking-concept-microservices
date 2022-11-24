@@ -45,3 +45,5 @@ jobs:
     - name: Building internet-banking-api-gateway
       working-directory: ./internet-banking-api-gateway
       run: ./gradlew build -x test
+
+
