@@ -4,9 +4,12 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8081/eureka
+      defaultZone: http://localhost:${server.port}/eureka
     register-with-eureka: false
     fetch-registry: false
   instance:
     prefer-ip-address: true
-    hostname: localhost
+
+logging:
+  file:
+    name: '/var/log/internet-banking-service-registry/application.log'
