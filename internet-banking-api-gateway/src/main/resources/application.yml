@@ -1,3 +1,14 @@
 spring:
   application:
     name: internet-banking-api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://${app.config.keycloak.url}/.well-known/jwks.json
+
+app:
+  config:
+    keycloak:
+      url: localhost:8080
