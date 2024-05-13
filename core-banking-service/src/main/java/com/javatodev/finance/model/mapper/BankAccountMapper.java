@@ -2,6 +2,7 @@ package com.javatodev.finance.model.mapper;
 
 import com.javatodev.finance.model.dto.BankAccount;
 import com.javatodev.finance.model.entity.BankAccountEntity;
+
 import org.springframework.beans.BeanUtils;
 
 public class BankAccountMapper extends BaseMapper<BankAccountEntity, BankAccount> {
