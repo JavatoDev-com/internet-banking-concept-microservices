@@ -34,8 +34,9 @@ dependencies {
 	//SPRING CLOUD CONFIG
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-	compileOnly 'org.projectlombok:lombok'
 	implementation 'com.mysql:mysql-connector-j:8.4.0'
+
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.h2database:h2:2.2.224'
