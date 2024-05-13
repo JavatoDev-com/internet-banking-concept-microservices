@@ -1,10 +1,10 @@
 package com.javatodev.finance.model.entity;
 
+import java.util.List;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -21,7 +21,7 @@ public class UserEntity {
     private String email;
     private String identificationNumber;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BankAccountEntity> accounts;
 
 }

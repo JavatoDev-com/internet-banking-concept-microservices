@@ -1,5 +1,5 @@
 package com.javatodev.finance.model;
 
 public enum AccountStatus {
-    PENDING,ACTIVE,DORMANT,BLOCKED
+    PENDING, ACTIVE, DORMANT, BLOCKED
 }

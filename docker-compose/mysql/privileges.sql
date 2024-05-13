@@ -1,5 +1,5 @@
 CREATE USER 'javatodev_development'@'%' IDENTIFIED BY 'oPItyPticIAt';
-GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT on *.* TO 'javatodev_development'@'%';
+GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES on *.* TO 'javatodev_development'@'%';
 FLUSH PRIVILEGES;
 
 CREATE DATABASE IF NOT EXISTS banking_core_service;
