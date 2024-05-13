@@ -4,19 +4,20 @@ import com.javatodev.finance.model.TransactionStatus;
 import com.javatodev.finance.model.dto.UtilityPayment;
 import com.javatodev.finance.model.entity.UtilityPaymentEntity;
 import com.javatodev.finance.model.mapper.UtilityPaymentMapper;
-import com.javatodev.finance.model.rest.response.AccountResponse;
-import com.javatodev.finance.repository.UtilityPaymentRepository;
 import com.javatodev.finance.model.rest.request.UtilityPaymentRequest;
 import com.javatodev.finance.model.rest.response.UtilityPaymentResponse;
+import com.javatodev.finance.repository.UtilityPaymentRepository;
 import com.javatodev.finance.service.rest.BankingCoreRestClient;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
