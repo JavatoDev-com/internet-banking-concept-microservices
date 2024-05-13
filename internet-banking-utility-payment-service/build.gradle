@@ -10,6 +10,7 @@ version = '0.0.1-SNAPSHOT'
 java {
 	sourceCompatibility = '21'
 }
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
