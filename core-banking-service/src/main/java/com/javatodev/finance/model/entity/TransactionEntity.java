@@ -4,7 +4,6 @@ import com.javatodev.finance.model.TransactionType;
 
 import java.math.BigDecimal;
 
-
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
