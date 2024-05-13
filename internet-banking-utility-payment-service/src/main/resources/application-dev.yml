@@ -1,0 +1,21 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.1.5:3306/banking_core_utility_payment_service
+    username: javatodev_development
+    password: oPItyPticIAt
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+
+info:
+  app:
+    name: ${spring.application.name}
