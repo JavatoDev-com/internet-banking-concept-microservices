@@ -3,7 +3,6 @@ package com.javatodev.finance.configuration.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -21,7 +20,7 @@ public class SecurityConfiguration {
         ServerHttpSecurity httpSecurity = http
             .authorizeExchange(exchanges -> {
                 //ALLOW ACTUATOR ENDPOINTS
-                    exchanges.pathMatchers("/actuator/**").permitAll()
+                exchanges.pathMatchers("/actuator/**").permitAll()
                     .pathMatchers("/user/actuator/**").permitAll()
                     .pathMatchers("/fund-transfer/actuator/**").permitAll()
                     .pathMatchers("/banking-core/actuator/**").permitAll()

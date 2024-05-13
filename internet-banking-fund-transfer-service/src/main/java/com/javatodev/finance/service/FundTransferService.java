@@ -8,13 +8,15 @@ import com.javatodev.finance.model.entity.FundTransferEntity;
 import com.javatodev.finance.model.mapper.FundTransferMapper;
 import com.javatodev.finance.model.repository.FundTransferRepository;
 import com.javatodev.finance.service.rest.client.BankingCoreFeignClient;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor

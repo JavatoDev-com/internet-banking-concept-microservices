@@ -1,9 +1,9 @@
 package com.javatodev.finance.configuration;
 
-import feign.Logger;
-import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import feign.Logger;
 
 @Configuration
 public class CustomFeignClientConfiguration {
