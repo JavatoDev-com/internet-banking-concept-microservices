@@ -1,4 +1,4 @@
-name: CI For Internet Banking Concept Microservice
+name: CI For Concept Microservice
 
 on:
   push:
