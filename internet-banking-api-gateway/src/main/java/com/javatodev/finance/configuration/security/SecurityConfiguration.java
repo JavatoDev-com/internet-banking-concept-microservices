@@ -19,6 +19,10 @@ public class SecurityConfiguration {
 
         ServerHttpSecurity httpSecurity = http
             .authorizeExchange(exchanges -> {
+
+                //ALLOW USER REGISTRATION API ENDPOINT
+                exchanges.pathMatchers("/user/api/v1/bank-users/register").permitAll();
+
                 //ALLOW ACTUATOR ENDPOINTS
                 exchanges.pathMatchers("/actuator/**").permitAll()
                     .pathMatchers("/user/actuator/**").permitAll()
