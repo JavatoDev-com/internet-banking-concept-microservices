@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class UtilityPayment {
+public class UtilityPayment extends AuditAware {
     private Long providerId;
     private BigDecimal amount;
     private String referenceNumber;

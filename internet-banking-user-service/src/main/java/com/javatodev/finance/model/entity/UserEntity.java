@@ -3,8 +3,6 @@ package com.javatodev.finance.model.entity;
 import com.javatodev.finance.model.dto.AuditAware;
 import com.javatodev.finance.model.dto.Status;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
