@@ -1,4 +1,4 @@
-package com.javatodev.finance.configuration;
+package com.javatodev.finance.configuration.feign;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

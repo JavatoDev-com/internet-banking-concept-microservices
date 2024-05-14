@@ -1,4 +1,4 @@
-package com.javatodev.finance.configuration;
+package com.javatodev.finance.configuration.feign;
 
 import feign.codec.ErrorDecoder;
 import org.springframework.cloud.openfeign.FeignClientProperties;
