@@ -1,4 +1,4 @@
-package com.javatodev.finance.configuration;
+package com.javatodev.finance.configuration.keycloak;
 
 import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.stereotype.Component;

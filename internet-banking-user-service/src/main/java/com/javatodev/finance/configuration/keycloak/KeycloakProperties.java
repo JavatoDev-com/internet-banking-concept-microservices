@@ -1,4 +1,4 @@
-package com.javatodev.finance.configuration;
+package com.javatodev.finance.configuration.keycloak;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

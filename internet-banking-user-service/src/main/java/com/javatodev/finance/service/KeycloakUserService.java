@@ -1,6 +1,6 @@
 package com.javatodev.finance.service;
 
-import com.javatodev.finance.configuration.KeycloakManager;
+import com.javatodev.finance.configuration.keycloak.KeycloakManager;
 import com.javatodev.finance.exception.EntityNotFoundException;
 
 import org.keycloak.admin.client.resource.UserResource;
