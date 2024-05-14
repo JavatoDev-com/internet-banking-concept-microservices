@@ -19,20 +19,24 @@ public class CustomFeignErrorDecoder implements ErrorDecoder {
 
         SimpleBankingGlobalException simpleBankingGlobalException = extractBankingCoreGlobalException(response);
 
-        switch (response.status()) {
-            case 400:
+        return switch (response.status()) {
+            case 400 -> {
                 log.error("Error in request went through feign client {} ", simpleBankingGlobalException.getMessage() + " - " + simpleBankingGlobalException.getCode());
-                return simpleBankingGlobalException;
-            case 401:
+                yield simpleBankingGlobalException;
+            }
+            case 401 -> {
                 log.error("Unauthorized Request Through Feign");
-                return new Exception("Unauthorized Request Through Feign");
-            case 404:
+                yield new Exception("Unauthorized Request Through Feign");
+            }
+            case 404 -> {
                 log.error("Unidentified Request Through Feign ");
-                return new Exception("Unidentified Request Through Feign");
-            default:
+                yield new Exception("Unidentified Request Through Feign");
+            }
+            default -> {
                 log.error("Error in request went through feign client");
-                return new Exception("Common Feign Exception");
-        }
+                yield new Exception("Common Feign Exception");
+            }
+        };
 
     }
 
