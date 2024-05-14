@@ -34,28 +34,15 @@ jobs:
 
     - name: Build
       run: ./gradlew build -x test
-      working-directory: ${{ matrix.dir }}  
+      working-directory: ${{ matrix.dir }}
 
-    # - name: Building core-banking-service
-    #   working-directory: ./core-banking-service
-    #   run: ./gradlew build -x test
-
-    # - name: Building internet-banking-fund-transfer-service
-    #   working-directory: ./internet-banking-fund-transfer-service
-    #   run: ./gradlew build -x test
-
-    # - name: Building internet-banking-user-service
-    #   working-directory: ./internet-banking-user-service
-    #   run: ./gradlew build -x test
-
-    # - name: Building internet-banking-utility-payment-service
-    #   working-directory: ./internet-banking-utility-payment-service
-    #   run: ./gradlew build -x test
-
-    # - name: Building internet-banking-service-registry
-    #   working-directory: ./internet-banking-service-registry
-    #   run: ./gradlew build -x test
-
-    # - name: Building internet-banking-api-gateway
-    #   working-directory: ./internet-banking-api-gateway
-    #   run: ./gradlew build -x test
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: microservice-artifacts
+        path: |
+          core-banking-service/build/libs/core-banking-service-0.0.1-SNAPSHOT.jar
+          internet-banking-api-gateway/build/libs/internet-banking-api-gateway-0.0.1-SNAPSHOT.jar
+        retention-days: 1
+        overwrite: true
+        
