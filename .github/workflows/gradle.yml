@@ -1,15 +1,25 @@
-name: CI For Internet Banking Concept Microservice
+name: CI For Concept Microservice
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, version-upgrade ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: [
+        'core-banking-service', 
+        'internet-banking-fund-transfer-service', 
+        'internet-banking-user-service', 
+        'internet-banking-utility-payment-service',
+        'internet-banking-service-registry',
+        'internet-banking-api-gateway'
+        ] }
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v2
@@ -22,26 +32,16 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0   
 
-    - name: Building core-banking-service
-      working-directory: ./core-banking-service
+    - name: Build
       run: ./gradlew build -x test
+      working-directory: ${{ matrix.dir }}
 
-    - name: Building internet-banking-fund-transfer-service
-      working-directory: ./internet-banking-fund-transfer-service
-      run: ./gradlew build -x test
+    - name: Test
+      run: ls -lrt
+      working-directory: ${{ matrix.dir }}
 
-    - name: Building internet-banking-user-service
-      working-directory: ./internet-banking-user-service
-      run: ./gradlew build -x test
-
-    - name: Building internet-banking-utility-payment-service
-      working-directory: ./internet-banking-utility-payment-service
-      run: ./gradlew build -x test
-
-    - name: Building internet-banking-service-registry
-      working-directory: ./internet-banking-service-registry
-      run: ./gradlew build -x test
-
-    - name: Building internet-banking-api-gateway
-      working-directory: ./internet-banking-api-gateway
-      run: ./gradlew build -x test
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.dir }}-artifacts
+        path: ${{ matrix.dir }}/build/libs/${{ matrix.dir }}*SNAPSHOT.jar
+        
