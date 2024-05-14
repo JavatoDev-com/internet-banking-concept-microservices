@@ -5,17 +5,22 @@ import com.javatodev.finance.exception.EntityNotFoundException;
 
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class KeycloakUserService {
 
+    private static final Logger log = LoggerFactory.getLogger(KeycloakUserService.class);
     private final KeycloakManager keyCloakManager;
 
     public Integer createUser(UserRepresentation userRepresentation) {
@@ -38,7 +43,7 @@ public class KeycloakUserService {
             UserResource userResource = keyCloakManager.getKeyCloakInstanceWithRealm().users().get(authId);
             return userResource.toRepresentation();
         } catch (Exception e) {
-            System.out.println(e);
+            log.error("User not found under given ID {}", e.toString());
             throw new EntityNotFoundException("User not found under given ID");
         }
     }
