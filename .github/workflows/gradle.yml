@@ -36,13 +36,7 @@ jobs:
       run: ./gradlew build -x test
       working-directory: ${{ matrix.dir }}
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: microservice-artifacts
-        path: |
-          core-banking-service/build/libs/core-banking-service-0.0.1-SNAPSHOT.jar
-          internet-banking-api-gateway/build/libs/internet-banking-api-gateway-0.0.1-SNAPSHOT.jar
-        retention-days: 1
-        overwrite: true
+    - name: Test
+      run: ls -lrt
+      working-directory: ${{ matrix.dir }}
         
