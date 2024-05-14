@@ -1,6 +1,7 @@
 package com.javatodev.finance.model.entity;
 
 import com.javatodev.finance.model.TransactionStatus;
+import com.javatodev.finance.model.dto.AuditAware;
 
 import java.math.BigDecimal;
 
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "fund_transfer")
-public class FundTransferEntity {
+public class FundTransferEntity extends AuditAware {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

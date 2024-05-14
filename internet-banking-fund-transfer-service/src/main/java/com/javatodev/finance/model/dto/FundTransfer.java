@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class FundTransfer {
+public class FundTransfer extends AuditAware {
     private Long id;
     private String transactionReference;
     private String status;
