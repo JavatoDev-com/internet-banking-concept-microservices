@@ -1,0 +1,4 @@
+spring:
+  cloud:
+    config:
+      uri: internet-banking-config-server
