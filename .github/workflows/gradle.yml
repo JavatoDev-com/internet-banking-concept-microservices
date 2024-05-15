@@ -70,8 +70,8 @@ jobs:
       - name: Move artifacts to the correct directory
         shell: bash
         run: |
-          mkdir -p ${{ matrix.dir }}
-          mv * ${{ matrix.dir }}
+          mkdir -p ${{ matrix.dir }}-artifacts
+          mv ${{ matrix.dir }}/* ${{ matrix.dir }}-artifacts
 
       - name: Test
         run: ls -lrt
