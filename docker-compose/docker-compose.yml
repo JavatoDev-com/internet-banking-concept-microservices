@@ -18,7 +18,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - keycloak:/opt/keycloak/data/import
+      - /home/chinthaka-dinadasa/developments/javatodev/internet-banking-concept-microservices/docker-compose/keycloak:/opt/keycloak/data/import
 
   keycloakdb:
     image: postgres:15
