@@ -1,5 +1,6 @@
-package com.javatodev.finance.configuration;
+package com.javatodev.finance.configuration.keycloak;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -12,7 +13,7 @@ public class KeycloakProperties {
     @Value("${app.config.keycloak.server-url}")
     private String serverUrl;
 
-    @Value("${app.config.keycloak.realm}")
+    @Getter @Value("${app.config.keycloak.realm}")
     private String realm;
 
     @Value("${app.config.keycloak.clientId}")
@@ -38,7 +39,4 @@ public class KeycloakProperties {
         return keycloakInstance;
     }
 
-    public String getRealm() {
-        return realm;
-    }
 }

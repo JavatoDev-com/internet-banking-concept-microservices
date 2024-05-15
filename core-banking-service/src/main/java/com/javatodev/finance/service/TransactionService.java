@@ -14,12 +14,14 @@ import com.javatodev.finance.model.entity.BankAccountEntity;
 import com.javatodev.finance.model.entity.TransactionEntity;
 import com.javatodev.finance.repository.BankAccountRepository;
 import com.javatodev.finance.repository.TransactionRepository;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
@@ -62,13 +64,13 @@ public class TransactionService {
         fromAccount.setAvailableBalance(fromAccount.getActualBalance().subtract(utilityPaymentRequest.getAmount()));
 
         transactionRepository.save(TransactionEntity.builder().transactionType(TransactionType.UTILITY_PAYMENT)
-                .account(fromAccount)
-                .transactionId(transactionId)
-                .referenceNumber(utilityPaymentRequest.getReferenceNumber())
-                .amount(utilityPaymentRequest.getAmount().negate()).build());
+            .account(fromAccount)
+            .transactionId(transactionId)
+            .referenceNumber(utilityPaymentRequest.getReferenceNumber())
+            .amount(utilityPaymentRequest.getAmount().negate()).build());
 
         return UtilityPaymentResponse.builder().message("Utility payment successfully completed")
-                .transactionId(transactionId).build();
+            .transactionId(transactionId).build();
 
     }
 
@@ -90,18 +92,18 @@ public class TransactionService {
         bankAccountRepository.save(fromBankAccountEntity);
 
         transactionRepository.save(TransactionEntity.builder().transactionType(TransactionType.FUND_TRANSFER)
-                .referenceNumber(toBankAccountEntity.getNumber())
-                .transactionId(transactionId)
-                .account(fromBankAccountEntity).amount(amount.negate()).build());
+            .referenceNumber(toBankAccountEntity.getNumber())
+            .transactionId(transactionId)
+            .account(fromBankAccountEntity).amount(amount.negate()).build());
 
         toBankAccountEntity.setActualBalance(toBankAccountEntity.getActualBalance().add(amount));
         toBankAccountEntity.setAvailableBalance(toBankAccountEntity.getActualBalance().add(amount));
         bankAccountRepository.save(toBankAccountEntity);
 
         transactionRepository.save(TransactionEntity.builder().transactionType(TransactionType.FUND_TRANSFER)
-                .referenceNumber(toBankAccountEntity.getNumber())
-                .transactionId(transactionId)
-                .account(toBankAccountEntity).amount(amount).build());
+            .referenceNumber(toBankAccountEntity.getNumber())
+            .transactionId(transactionId)
+            .account(toBankAccountEntity).amount(amount).build());
 
         return transactionId;
 

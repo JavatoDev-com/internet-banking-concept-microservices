@@ -1,8 +1,9 @@
-package com.javatodev.finance.configuration;
+package com.javatodev.finance.configuration.keycloak;
 
-import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

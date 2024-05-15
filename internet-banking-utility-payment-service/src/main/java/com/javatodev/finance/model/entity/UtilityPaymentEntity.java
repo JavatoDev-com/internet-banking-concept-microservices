@@ -1,17 +1,19 @@
 package com.javatodev.finance.model.entity;
 
 import com.javatodev.finance.model.TransactionStatus;
+import com.javatodev.finance.model.dto.AuditAware;
+
+import java.math.BigDecimal;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "utility_payment")
-public class UtilityPaymentEntity {
+public class UtilityPaymentEntity extends AuditAware {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

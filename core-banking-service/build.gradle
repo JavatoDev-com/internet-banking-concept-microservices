@@ -1,27 +1,22 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.javatodev.finance'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+java {
+    sourceCompatibility = '21'
 }
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/snapshot' }
-    maven { url 'https://repo.spring.io/milestone' }
 }
 
 ext {
-    set('springCloudVersion', "2020.0.4")
+    set('springCloudVersion', "2023.0.0")
 }
 
 dependencies {
@@ -36,11 +31,13 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    implementation 'org.flywaydb:flyway-core:8.0.3'
-    runtimeOnly 'mysql:mysql-connector-java'
+
+    implementation 'org.flywaydb:flyway-core:10.12.0'
+    implementation 'org.flywaydb:flyway-mysql:10.12.0'
+    implementation 'com.mysql:mysql-connector-j:8.4.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'com.h2database:h2:2.2.224'
 
 
 }

@@ -3,7 +3,7 @@ package com.javatodev.finance.model.dto;
 import lombok.Data;
 
 @Data
-public class User {
+public class User extends AuditAware {
     private Long id;
 
     private String email;

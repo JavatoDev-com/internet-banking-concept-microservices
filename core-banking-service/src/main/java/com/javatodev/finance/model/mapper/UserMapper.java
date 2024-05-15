@@ -2,9 +2,10 @@ package com.javatodev.finance.model.mapper;
 
 import com.javatodev.finance.model.dto.User;
 import com.javatodev.finance.model.entity.UserEntity;
+
 import org.springframework.beans.BeanUtils;
 
-public class UserMapper extends BaseMapper<UserEntity, User>{
+public class UserMapper extends BaseMapper<UserEntity, User> {
     private BankAccountMapper bankAccountMapper = new BankAccountMapper();
 
     @Override

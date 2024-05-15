@@ -1,12 +1,15 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.6'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'org.springframework.boot' version '3.2.4'
+	id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.javatodev.finance'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+
+java {
+	sourceCompatibility = '21'
+}
 
 configurations {
 	compileOnly {
@@ -19,7 +22,7 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "2020.0.4")
+	set('springCloudVersion', "2023.0.0")
 }
 
 dependencies {
@@ -31,11 +34,12 @@ dependencies {
 	//SPRING CLOUD CONFIG
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+	implementation 'com.mysql:mysql-connector-j:8.4.0'
+
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'com.h2database:h2:1.4.200'
+	testImplementation 'com.h2database:h2:2.2.224'
 }
 
 dependencyManagement {

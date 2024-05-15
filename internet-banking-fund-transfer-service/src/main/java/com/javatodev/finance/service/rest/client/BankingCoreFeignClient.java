@@ -4,6 +4,7 @@ import com.javatodev.finance.configuration.CustomFeignClientConfiguration;
 import com.javatodev.finance.model.dto.request.FundTransferRequest;
 import com.javatodev.finance.model.dto.response.AccountResponse;
 import com.javatodev.finance.model.dto.response.FundTransferResponse;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
