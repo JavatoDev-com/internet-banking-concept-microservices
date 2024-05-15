@@ -8,7 +8,8 @@ In this article series I’m going to explain using internet banking API concept
 
 ### Releases
 
-[1.0.0](https://github.com/JavatoDev-com/internet-banking-concept-microservices/releases/tag/v.1.0.0) - Initial release with Java 11 and Spring Boot 2.
+- [1.0.0](https://github.com/JavatoDev-com/internet-banking-concept-microservices/releases/tag/v.1.0.0) - Initial release with Java 11 and Spring Boot 2.
+- [2.0.0](https://github.com/JavatoDev-com/internet-banking-concept-microservices/releases/tag/v.1.0.0) - Updated version with Java 21, Spring Boot 3.2.4 , Spring Cloud 2023.0.0
 
 ### Microservices Inside This Project
 
