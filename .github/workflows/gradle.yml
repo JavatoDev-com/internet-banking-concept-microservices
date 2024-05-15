@@ -80,16 +80,12 @@ jobs:
         run: ls -lrt
         working-directory: ${{ matrix.dir }}-downloaded-artifacts
 
-      - name: Build Docker image
+      - name: Build Docker images
         run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
         working-directory: ${{ matrix.dir }}-downloaded-artifacts
-#
-#
-#      - name: Build Docker image
-#        run: docker build -t ghcr.io/socialic-v2-0/socialic-connector-service:latest .
-#
-#      - name: Log in to GitHub Container Registry
-#        run: echo ${{ secrets.DOCKER_ACTION_TOKEN }} | docker login ghcr.io -u chinthaka-dinadasa --password-stdin
+
+      - name: Log in to GitHub Container Registry
+        run: echo ${{ secrets.DOCKER_ACTION_TOKEN }} | docker login ghcr.io -u chinthaka-dinadasa --password-stdin
 #
 #      - name: Push Docker image to GitHub Container Registry
 #        run: docker push ghcr.io/socialic-v2-0/socialic-connector-service:latest
