@@ -18,7 +18,9 @@ services:
       - 8080:8080
     volumes:
       - ./keycloak:/opt/keycloak/data/import
-    network_mode: bridge
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.5
 
   keycloakdb:
     image: postgres:15
@@ -28,7 +30,9 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
-    network_mode: bridge
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.6
 
   mysql_core_db:
     build: mysql
@@ -39,13 +43,17 @@ services:
       - 3306:3306
     volumes:
       - mysqldata:/var/lib/mysql
-    network_mode: bridge
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.7
 
   internet-banking-config-server:
     image: javatodev/internet-banking-config-server
     ports:
       - 8090:8090
-    network_mode: bridge
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.8
 
   internet-banking-service-registry:
     image: javatodev/internet-banking-service-registry
