@@ -2,9 +2,9 @@ name: CI For Concept Microservice
 
 on:
   push:
-    branches: [ version-upgrade ]
+    branches: [ main ]
   pull_request:
-    branches: [ version-upgrade ]
+    branches: [ main ]
 
 jobs:
   build:
