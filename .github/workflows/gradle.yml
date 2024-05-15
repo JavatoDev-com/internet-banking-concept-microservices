@@ -52,6 +52,7 @@ jobs:
     strategy:
       matrix: { dir: [
         'core-banking-service',
+        'internet-banking-config-server',
         'internet-banking-fund-transfer-service',
         'internet-banking-user-service',
         'internet-banking-utility-payment-service',
