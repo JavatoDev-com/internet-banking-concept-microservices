@@ -81,11 +81,11 @@ jobs:
         working-directory: ${{ matrix.dir }}-downloaded-artifacts
 
       - name: Build Docker images
-        run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
+        run: docker build -t ghcr.io/JavatoDev-com/${{ matrix.dir }} .
         working-directory: ${{ matrix.dir }}-downloaded-artifacts
 
       - name: Log in to GitHub Container Registry
         run: echo ${{ secrets.DOCKER_ACTION_TOKEN }} | docker login ghcr.io -u chinthaka-dinadasa --password-stdin
 
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/javatodev/${{ matrix.dir }}
+        run: docker push ghcr.io/JavatoDev-com/${{ matrix.dir }}
