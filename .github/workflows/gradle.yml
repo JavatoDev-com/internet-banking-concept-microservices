@@ -22,7 +22,7 @@ jobs:
       contents: read
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
@@ -34,10 +34,6 @@ jobs:
 
     - name: Build
       run: ./gradlew build -x test
-      working-directory: ${{ matrix.dir }}
-
-    - name: Test
-      run: ls -lrt
       working-directory: ${{ matrix.dir }}
 
     - uses: actions/upload-artifact@v4
@@ -72,10 +68,13 @@ jobs:
         with:
           name: ${{ matrix.dir }}-artifacts
 
+      - name: Test
+        run: ls -lrt
+
       - name: Build Docker image
         run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
         working-directory: ${{ matrix.dir }}
-        
+
 #        with:
 #          name: ${{ matrix.dir }}-artifacts
 #
