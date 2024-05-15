@@ -36,6 +36,16 @@ services:
     volumes:
       - mysqldata:/var/lib/mysql
 
+  internet-banking-config-server:
+    image: javatodev/internet-banking-config-server
+    ports:
+      - 8090:8090
+
+  internet-banking-service-registry:
+    image: javatodev/internet-banking-service-registry
+    ports:
+      - 8081:8081
+
 volumes:
   postgres_data:
   mysqldata:
