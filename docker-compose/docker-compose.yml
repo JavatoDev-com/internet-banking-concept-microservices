@@ -30,6 +30,9 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.9
 
   mysql_core_db:
     build: mysql
