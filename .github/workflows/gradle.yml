@@ -86,6 +86,6 @@ jobs:
 
       - name: Log in to GitHub Container Registry
         run: echo ${{ secrets.DOCKER_ACTION_TOKEN }} | docker login ghcr.io -u chinthaka-dinadasa --password-stdin
-#
-#      - name: Push Docker image to GitHub Container Registry
-#        run: docker push ghcr.io/socialic-v2-0/socialic-connector-service:latest
+
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/javatodev/${{ matrix.dir }}
