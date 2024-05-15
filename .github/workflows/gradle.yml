@@ -72,6 +72,9 @@ jobs:
         run: |
           ls -lrt
           mkdir -p ${{ matrix.dir }}-downloaded-artifacts
+          mv build ${{ matrix.dir }}-downloaded-artifacts
+          mv Dockerfile ${{ matrix.dir }}-downloaded-artifacts
+          mv wait-for-it.sh ${{ matrix.dir }}-downloaded-artifacts
           ls -lrt
 
 #      - name: Test
