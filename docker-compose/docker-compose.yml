@@ -45,6 +45,7 @@ services:
       - mysqldata:/var/lib/mysql
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.8
 
   internet-banking-config-server:
     image: javatodev/internet-banking-config-server
@@ -52,6 +53,7 @@ services:
       - 8090:8090
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.7
 
   internet-banking-service-registry:
     image: javatodev/internet-banking-service-registry
@@ -59,6 +61,7 @@ services:
       - 8081:8081
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.6
 
   internet-banking-api-gateway:
     image: javatodev/internet-banking-api-gateway
@@ -67,6 +70,7 @@ services:
     entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.5
 
   internet-banking-user-service:
     image: javatodev/internet-banking-user-service
@@ -75,6 +79,7 @@ services:
     entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "./wait-for-it.sh", "mysql_core_db:3306", "--timeout=50", "--","java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.4
 
   internet-banking-fund-transfer-service:
     image: javatodev/internet-banking-fund-transfer-service
@@ -83,6 +88,7 @@ services:
     entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "./wait-for-it.sh", "mysql_core_db:3306", "--timeout=50", "--","java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.3
 
   internet-banking-utility-payment-service:
     image: javatodev/internet-banking-utility-payment-service
@@ -91,6 +97,7 @@ services:
     entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "./wait-for-it.sh", "mysql_core_db:3306", "--timeout=50", "--","java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
     networks:
       javatodev_ib_network:
+        ipv4_address: 172.25.0.2
 
   core-banking-service:
     image: javatodev/core-banking-service
@@ -99,7 +106,8 @@ services:
     entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "./wait-for-it.sh", "mysql_core_db:3306", "--timeout=50", "--","java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
     networks:
       javatodev_ib_network:
-      
+        ipv4_address: 172.25.0.1
+
 volumes:
   postgres_data:
   mysqldata:
