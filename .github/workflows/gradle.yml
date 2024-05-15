@@ -69,7 +69,7 @@ jobs:
           name: ${{ matrix.dir }}-artifacts
 
       - name: Test
-        run: ls -lrt
+        run: cd $GITHUB_WORKSPACE && ls -lrt
 
       - name: Build Docker image
         run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
