@@ -2,8 +2,8 @@ version: '3.6'
 
 services:
   keycloak_web:
-    # image: quay.io/keycloak/keycloak:23.0.7
-    build: keycloak
+    image: quay.io/keycloak/keycloak:23.0.7
+    # build: keycloak
     container_name: keycloak_web
     environment:
       KC_DB: postgres
@@ -12,10 +12,13 @@ services:
       KC_DB_PASSWORD: password
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
+    command: ["start-dev", "--import-realm"]
     depends_on:
       - keycloakdb
     ports:
       - 8080:8080
+    volumes:
+      - keycloak:/opt/keycloak/data/import
 
   keycloakdb:
     image: postgres:15
