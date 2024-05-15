@@ -72,7 +72,6 @@ jobs:
         run: |
           ls -lrt
           mkdir -p ${{ matrix.dir }}-downloaded-artifacts
-          mv * ${{ matrix.dir }}-downloaded-artifacts
           ls -lrt
 
 #      - name: Test
