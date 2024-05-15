@@ -50,6 +50,7 @@ services:
     image: javatodev/internet-banking-api-gateway
     ports:
       - 8082:8082
+    entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
 
 volumes:
   postgres_data:
