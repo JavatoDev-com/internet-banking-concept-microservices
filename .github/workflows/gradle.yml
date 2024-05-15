@@ -67,8 +67,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ matrix.dir }}-artifacts
-        working-directory: ${{ matrix.dir }}
-        
+      - name: Move artifacts to the correct directory
+        shell: bash
+        run: |
+          mv ${{ matrix.dir }}-artifacts/* ${{ matrix.dir }}
+
       - name: Test
         run: ls -lrt
         working-directory: ${{ matrix.dir }}
