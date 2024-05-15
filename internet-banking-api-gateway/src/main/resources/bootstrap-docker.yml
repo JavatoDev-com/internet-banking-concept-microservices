@@ -1,4 +1,4 @@
 spring:
   cloud:
     config:
-      uri: http://172.25.0.8:8090
+      uri: http://internet-banking-config-server:8090
