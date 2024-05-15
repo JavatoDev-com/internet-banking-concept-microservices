@@ -7,4 +7,4 @@ COPY wait-for-it.sh wait-for-it.sh
 RUN chmod +x wait-for-it.sh
 # Add bash for wait-for-it.sh
 RUN apk add --no-cache bash
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
