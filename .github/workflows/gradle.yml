@@ -48,3 +48,43 @@ jobs:
           Dockerfile
           wait-for-it.sh
         
+
+
+  docker_publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: [
+        'core-banking-service',
+        'internet-banking-fund-transfer-service',
+        'internet-banking-user-service',
+        'internet-banking-utility-payment-service',
+        'internet-banking-service-registry',
+        'internet-banking-api-gateway'
+      ] }
+    permissions:
+      contents: read
+
+    needs: build
+
+    steps:
+      - name: Download latest build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.dir }}-artifacts
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
+        working-directory: ${{ matrix.dir }}
+        
+#        with:
+#          name: ${{ matrix.dir }}-artifacts
+#
+#
+#      - name: Build Docker image
+#        run: docker build -t ghcr.io/socialic-v2-0/socialic-connector-service:latest .
+#
+#      - name: Log in to GitHub Container Registry
+#        run: echo ${{ secrets.DOCKER_ACTION_TOKEN }} | docker login ghcr.io -u chinthaka-dinadasa --password-stdin
+#
+#      - name: Push Docker image to GitHub Container Registry
+#        run: docker push ghcr.io/socialic-v2-0/socialic-connector-service:latest
