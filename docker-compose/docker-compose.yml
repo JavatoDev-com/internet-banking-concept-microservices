@@ -52,14 +52,19 @@ services:
     image: javatodev/internet-banking-service-registry
     ports:
       - 8081:8081
-    network_mode: bridge
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.9
 
   internet-banking-api-gateway:
     image: javatodev/internet-banking-api-gateway
     ports:
       - 8082:8082
     entrypoint: ["./wait-for-it.sh", "localhost:8081", "--timeout=50", "--", "./wait-for-it.sh", "localhost:8090", "--timeout=50", "--", "java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
-    network_mode: bridge
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.10
+
   # internet-banking-user-service:
   #   image: javatodev/internet-banking-user-service
   #   ports:
@@ -87,3 +92,12 @@ services:
 volumes:
   postgres_data:
   mysqldata:
+
+networks:
+  javatodev_ib_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1
