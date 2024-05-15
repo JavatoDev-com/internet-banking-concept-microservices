@@ -75,11 +75,10 @@ jobs:
           mv build ${{ matrix.dir }}-downloaded-artifacts
           mv Dockerfile ${{ matrix.dir }}-downloaded-artifacts
           mv wait-for-it.sh ${{ matrix.dir }}-downloaded-artifacts
-          ls -lrt
 
-#      - name: Test
-#        run: ls -lrt
-#        working-directory: ${{ matrix.dir }}
+      - name: Validate moved artifacts
+        run: ls -lrt
+        working-directory: ${{ matrix.dir }}-downloaded-artifacts
 #
 #      - name: Build Docker image
 #        run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
