@@ -71,7 +71,8 @@ jobs:
         shell: bash
         run: |
           ls -lrt
-          cd ${{ matrix.dir }}
+          mkdir -p ${{ matrix.dir }}-downloaded-artifacts
+          cd ${{ matrix.dir }}-downloaded-artifacts
           ls -lrt
 
 #      - name: Test
