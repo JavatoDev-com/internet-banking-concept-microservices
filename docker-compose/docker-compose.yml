@@ -46,6 +46,11 @@ services:
     ports:
       - 8081:8081
 
+  internet-banking-api-gateway:
+    image: javatodevinternet-banking-api-gateway
+    ports:
+      - 8082:8082
+
 volumes:
   postgres_data:
   mysqldata:
