@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix: { dir: [
         'core-banking-service',
+        'internet-banking-config-server',
         'internet-banking-fund-transfer-service',
         'internet-banking-user-service',
         'internet-banking-utility-payment-service',
@@ -81,15 +82,14 @@ jobs:
         working-directory: ${{ matrix.dir }}-downloaded-artifacts
 
       - name: Build Docker images
-        run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
+        run: docker build -t javatodev/${{ matrix.dir }} .
         working-directory: ${{ matrix.dir }}-downloaded-artifacts
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.DOCKER_ACTION_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/javatodev/${{ matrix.dir }}
+        run: docker push javatodev/${{ matrix.dir }}
