@@ -3,7 +3,6 @@ version: '3.6'
 services:
   keycloak_web:
     image: quay.io/keycloak/keycloak:23.0.7
-    # build: keycloak
     container_name: keycloak_web
     environment:
       KC_DB: postgres
@@ -60,7 +59,7 @@ services:
     image: javatodev/internet-banking-api-gateway
     ports:
       - 8082:8082
-    entrypoint: ["./wait-for-it.sh", "localhost:8081", "--timeout=50", "--", "./wait-for-it.sh", "localhost:8090", "--timeout=50", "--", "java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
+    entrypoint: ["./wait-for-it.sh", "internet-banking-service-registry:8081", "--timeout=50", "--", "./wait-for-it.sh", "internet-banking-config-server:8090", "--timeout=50", "--", "java", "-jar", "-Dspring.profiles.active=docker", "/app.jar"]
     networks:
       javatodev_ib_network:
         ipv4_address: 172.25.0.10
