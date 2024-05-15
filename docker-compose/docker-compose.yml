@@ -11,11 +11,13 @@ services:
       KC_DB_PASSWORD: password
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
-    command: start-dev
+    command: start-dev --import-realm
     depends_on:
       - keycloakdb
     ports:
       - 8080:8080
+    volumes:
+      - ./keycloak:/opt/keyclaok/data/import
 
   keycloakdb:
     image: postgres:15
