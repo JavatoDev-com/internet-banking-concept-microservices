@@ -59,7 +59,7 @@ jobs:
       ] }
     permissions:
       contents: read
-
+      packages: write
     needs: build
 
     steps:
