@@ -16,8 +16,6 @@ services:
       - keycloakdb
     ports:
       - 8080:8080
-    volumes:
-      - ./keycloak:/opt/keyclaok/data/import
 
   keycloakdb:
     image: postgres:15
