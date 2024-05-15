@@ -477,16 +477,22 @@
     {
       "id": "267fff27-fa2a-428d-9115-a731731722d2",
       "createdTimestamp": 1715799797189,
-      "username": "sendtoclabz@gmail.com",
+      "username": "ib_admin@javatodev.com",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
-      "firstName": "Chinthaka",
-      "lastName": "Dinadasa",
-      "email": "sendtoclabz@gmail.com",
+      "firstName": "Javatodev",
+      "lastName": "Admin",
+      "email": "ib_admin@javatodev.com",
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "notBefore": 0,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "5V7huE3G86uB"
+        }
+      ],
       "access": {
           "manageGroupMembership": true,
           "view": true,
