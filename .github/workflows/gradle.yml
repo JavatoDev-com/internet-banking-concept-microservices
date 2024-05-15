@@ -70,16 +70,17 @@ jobs:
       - name: Move artifacts to the correct directory
         shell: bash
         run: |
-          mkdir -p ${{ matrix.dir }}-artifacts
-          mv ${{ matrix.dir }}/* ${{ matrix.dir }}-artifacts
+          ls -lrt
+          cd ${{ matrix.dir }}
+          ls -lrt
 
-      - name: Test
-        run: ls -lrt
-        working-directory: ${{ matrix.dir }}
-
-      - name: Build Docker image
-        run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
-        working-directory: ${{ matrix.dir }}
+#      - name: Test
+#        run: ls -lrt
+#        working-directory: ${{ matrix.dir }}
+#
+#      - name: Build Docker image
+#        run: docker build -t ghcr.io/javatodev/${{ matrix.dir }} .
+#        working-directory: ${{ matrix.dir }}
 
 #        with:
 #          name: ${{ matrix.dir }}-artifacts
