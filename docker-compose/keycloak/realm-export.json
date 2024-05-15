@@ -475,6 +475,27 @@
   "webAuthnPolicyPasswordlessExtraOrigins": [],
   "users": [
     {
+      "id": "267fff27-fa2a-428d-9115-a731731722d2",
+      "createdTimestamp": 1715799797189,
+      "username": "sendtoclabz@gmail.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Chinthaka",
+      "lastName": "Dinadasa",
+      "email": "sendtoclabz@gmail.com",
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "notBefore": 0,
+      "access": {
+          "manageGroupMembership": true,
+          "view": true,
+          "mapRoles": true,
+          "impersonate": false,
+          "manage": true
+      }
+    },
+    {
       "id": "a3c44ecb-cb94-4a3f-9014-f40bd4ff5fce",
       "createdTimestamp": 1715702547923,
       "username": "service-account-javatodev-internet-banking-api-client",
