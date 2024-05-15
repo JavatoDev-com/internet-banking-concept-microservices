@@ -47,7 +47,7 @@ services:
       - 8081:8081
 
   internet-banking-api-gateway:
-    image: javatodevinternet-banking-api-gateway
+    image: javatodev/internet-banking-api-gateway
     ports:
       - 8082:8082
 
