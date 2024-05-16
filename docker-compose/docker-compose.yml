@@ -1,6 +1,15 @@
 version: '3.6'
 
 services:
+
+  zipkin:
+    image: openzipkin/zipkin:3
+    ports:
+      - 9411:9411
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.12
+
   keycloak_web:
     image: quay.io/keycloak/keycloak:23.0.7
     container_name: keycloak_web
