@@ -1,0 +1,86 @@
+version: '3.6'
+
+services:
+
+  zipkin:
+    image: openzipkin/zipkin:3
+    ports:
+      - 9411:9411
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.12
+
+  keycloak_web:
+    image: quay.io/keycloak/keycloak:23.0.7
+    container_name: keycloak_web
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloakdb:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: password
+    command: ["start-dev", "--import-realm"]
+    depends_on:
+      - keycloakdb
+    ports:
+      - 8080:8080
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.11
+
+  keycloakdb:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.10
+
+  mysql_core_db:
+    build: mysql
+    container_name: mysql_javatodev_app
+    environment:
+      MYSQL_ROOT_PASSWORD: woVERANKliGharym
+    ports:
+      - 3306:3306
+    volumes:
+      - mysqldata:/var/lib/mysql
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.9
+
+  internet-banking-config-server:
+    image: javatodev/internet-banking-config-server
+    ports:
+      - 8090:8090
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.8
+
+  internet-banking-service-registry:
+    image: javatodev/internet-banking-service-registry
+    ports:
+      - 8081:8081
+    networks:
+      javatodev_ib_network:
+        ipv4_address: 172.25.0.7
+
+volumes:
+  postgres_data:
+  mysqldata:
+
+networks:
+  javatodev_ib_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+          gateway: 172.25.0.1

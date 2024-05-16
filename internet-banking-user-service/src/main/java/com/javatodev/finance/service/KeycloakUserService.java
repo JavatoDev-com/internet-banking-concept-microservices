@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class KeycloakUserService {
 
-    private static final Logger log = LoggerFactory.getLogger(KeycloakUserService.class);
     private final KeycloakManager keyCloakManager;
 
     public Integer createUser(UserRepresentation userRepresentation) {
