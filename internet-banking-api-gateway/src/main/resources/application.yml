@@ -1,3 +1,8 @@
 spring:
   application:
     name: internet-banking-api-gateway
+  sleuth:
+    sampler:
+      percentage: 1.0
+    web:
+      skipPattern: (^cleanup.*)
