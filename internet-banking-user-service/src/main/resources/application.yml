@@ -1,3 +1,18 @@
 spring:
   application:
     name: internet-banking-user-service
+
+##ACTUATOR ENDPOINT CONFIGURATIONS
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,shutdown
+  endpoint:
+    prometheus:
+      enabled: true
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
