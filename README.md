@@ -1,5 +1,3 @@
-[![CI For Concept Microservice](https://github.com/JavatoDev-com/internet-banking-concept-microservices/actions/workflows/gradle.yml/badge.svg)](https://github.com/JavatoDev-com/internet-banking-concept-microservices/actions/workflows/gradle.yml)
-
 # Internet Banking Concept With Java Spring Boot Microservices
 
 This source code was developed for Java based microservices tutorial series from [javatodev.com](https://javatodev.com).
