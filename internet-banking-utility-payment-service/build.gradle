@@ -44,7 +44,7 @@ dependencies {
 	implementation 'io.github.openfeign:feign-micrometer'
 
 	//SWAGGER
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0'
 
 	//SPRING CLOUD CONFIG
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
