@@ -43,6 +43,9 @@ dependencies {
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	implementation 'io.github.openfeign:feign-micrometer'
 
+	//SWAGGER
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+
 	//SPRING CLOUD CONFIG
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
