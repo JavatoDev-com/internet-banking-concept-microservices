@@ -45,6 +45,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.keycloak:keycloak-admin-client:24.0.4'
 
+    //SWAGGER
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0'
+
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
