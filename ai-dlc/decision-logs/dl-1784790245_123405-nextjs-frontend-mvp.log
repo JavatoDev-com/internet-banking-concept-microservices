@@ -1,0 +1,94 @@
+================================================================================
+DECISION LOG
+================================================================================
+File        : dl-1784790245_123405-nextjs-frontend-mvp.log
+Author      : chindin99x
+Date        : 2026-07-23 12:34
+Related Task: task-1784790245_123405-nextjs-frontend-mvp.log
+================================================================================
+
+PURPOSE
+-------
+Build a Next.js frontend MVP for the Internet Banking Concept microservices platform.
+The existing backend provides 7 Spring Boot microservices (user, fund-transfer, utility-payment,
+core-banking, api-gateway, config-server, service-registry) with no frontend. This task
+creates a complete working demo web application so the platform can be showcased end-to-end.
+
+
+QUESTIONS & ANSWERS
+-------------------
+Q1: Which frontend technology should we use?
+A1: Next.js
+
+Q2: Which flows should the MVP cover?
+A2: All five:
+    - Login / authentication (via Keycloak)
+    - Dashboard (account balance, recent transactions)
+    - Fund transfer between accounts
+    - Utility bill payment
+    - User profile
+
+
+DECISIONS MADE
+--------------
+1. Use Next.js (App Router) with TypeScript — matches modern Next.js conventions and gives us
+   server components, layouts, and built-in routing.
+2. Use NextAuth.js with Keycloak provider for OAuth2/OIDC authentication — the backend already
+   uses Keycloak 23; NextAuth handles token lifecycle and session management cleanly.
+3. Use Tailwind CSS for styling — zero-config, utility-first, fast to build a professional UI.
+4. Use shadcn/ui component library (built on Radix UI + Tailwind) — gives accessible, polished
+   components without heavy bundle cost.
+5. All API calls route through the existing API Gateway at port 8082 — no direct calls to
+   downstream services from the frontend.
+6. Place the frontend at `internet-banking-frontend/` in the repo root, parallel to the existing
+   Spring Boot service directories.
+7. Use React Query (TanStack Query) for server state / data fetching — cleaner than raw fetch
+   with loading/error states built in.
+8. Environment variables in `.env.local` for gateway URL, Keycloak realm/client config.
+
+
+ALTERNATIVES CONSIDERED
+-----------------------
+- Angular: Heavier setup, less ecosystem momentum for rapid MVP; rejected in favour of Next.js.
+- Create React App: Deprecated; no SSR capability; rejected.
+- Axios instead of React Query: React Query provides caching + loading states with less boilerplate; kept fetch/React Query.
+- Calling downstream services directly: Bypasses gateway security; rejected — all calls go via port 8082.
+
+
+SCOPE OF CHANGES
+----------------
+Affected services: internet-banking-api-gateway (CORS config may need updating), new internet-banking-frontend module
+Affected layers  : New Next.js app — pages, components, hooks, API client layer
+New endpoints    : None on backend — frontend consumes existing endpoints
+Schema changes   : None
+New dependencies : Next.js 14, NextAuth.js, Tailwind CSS, shadcn/ui, TanStack Query, lucide-react
+
+
+RISKS & NOTES
+-------------
+- CORS: The API gateway must allow requests from the Next.js dev origin (localhost:3000).
+  May need to add CORS configuration to the gateway.
+- Keycloak client: A public OIDC client for the frontend needs to exist in Keycloak realm
+  (or we reuse the existing one). The docker-compose setup includes a pre-loaded Keycloak realm.
+- Token forwarding: NextAuth stores the access token in the session; all API calls must
+  attach it as `Authorization: Bearer {token}` to pass through the gateway.
+- The docker-compose environment must be running for the frontend to function.
+
+
+ACCEPTANCE CRITERIA
+-------------------
+- [ ] Login page authenticates via Keycloak and redirects to dashboard on success
+- [ ] Dashboard shows account balance and last 10 transactions
+- [ ] Fund transfer form submits and shows success/error feedback
+- [ ] Utility payment form submits and shows success/error feedback
+- [ ] User profile page displays current user details
+- [ ] Logout clears session and returns to login
+- [ ] All pages are protected (unauthenticated users redirected to login)
+- [ ] Next.js app builds without errors (`npm run build`)
+- [ ] API gateway CORS updated to allow frontend origin
+
+
+================================================================================
+AMENDMENTS (added during or after implementation)
+================================================================================
+================================================================================
