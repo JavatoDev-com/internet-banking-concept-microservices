@@ -1,0 +1,62 @@
+================================================================================
+TASK
+================================================================================
+File        : task-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+Author      : {author name}
+Created     : {YYYY-MM-DD HH:MM}
+Related DL  : dl-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+
+STATUS      : PENDING
+================================================================================
+
+TITLE
+-----
+{One-line description of what this task implements}
+
+
+DESCRIPTION
+-----------
+{2-5 sentences describing the full scope of work. What changes, why, and
+ what the expected outcome is.}
+
+
+ACCEPTANCE CRITERIA
+-------------------
+- [ ] {Criterion 1}
+- [ ] {Criterion 2}
+- [ ] {Criterion 3}
+- [ ] Build passes: ./gradlew clean build
+
+
+IMPLEMENTATION PLAN
+-------------------
+1. {Step 1}
+2. {Step 2}
+3. {Step 3}
+{Add more steps as needed.}
+
+
+IMPLEMENTATION NOTES
+--------------------
+{Record any significant decisions, pivots, or discoveries made during
+ implementation that were not captured in the decision log. Leave blank
+ initially and update as work progresses.}
+
+
+================================================================================
+BUILD VERIFICATION
+================================================================================
+Command     : ./gradlew clean build
+Run at      : {YYYY-MM-DD HH:MM}
+Result      : PENDING   ← update to PASS or FAIL after running
+Output notes: {any relevant warnings or errors}
+================================================================================
+
+================================================================================
+COMPLETION
+================================================================================
+STATUS      : PENDING   ← update to IN_PROGRESS → COMPLETE (or FAILED)
+Started at  : {YYYY-MM-DD HH:MM}
+Completed at: {YYYY-MM-DD HH:MM}
+Notes       : {Summary of what was done and any follow-up items}
+================================================================================
