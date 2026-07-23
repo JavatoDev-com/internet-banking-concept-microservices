@@ -41,11 +41,10 @@ ALTERNATIVES CONSIDERED
 
 SCOPE OF CHANGES
 ----------------
-Affected layers  : {controller / service / model / config / ...}
-Affected platforms: {Facebook / Instagram / LinkedIn / Pinterest / TikTok / YouTube / Threads / All}
+Affected services: {core-banking-service / internet-banking-user-service / internet-banking-fund-transfer-service / internet-banking-utility-payment-service / internet-banking-api-gateway / ...}
+Affected layers  : {controller / service / model / config / repository / exception / ...}
 New endpoints    : {list or "none"}
-Schema changes   : {MongoDB field/document changes or "none"}
-MQ changes       : {new routing keys / queues or "none"}
+Schema changes   : {MySQL table/column changes or Flyway migration or "none"}
 New dependencies : {library additions or "none"}
 
 

@@ -14,124 +14,179 @@ Full process is defined in [ai-dlc/coding-assistant.md](ai-dlc/coding-assistant.
 3. **Decision log** — `ai-dlc/decision-logs/dl-{unix_epoch}_{HHMMSS}-{prefix}.log`
 4. **Task file** — `ai-dlc/tasks/task-{unix_epoch}_{HHMMSS}-{prefix}.log` with `STATUS: PENDING` (same timestamp as DL)
 5. **Implement** — update task to `IN_PROGRESS`
-6. **Build** — `./gradlew clean build` must pass; fix failures, do not skip
+6. **Build** — run `./gradlew clean build` from within the affected service directory; must pass; fix failures, do not skip
 7. **API Contracts** — `ai-dlc/api-contracts/api-contract-{unix_epoch}_{HHMMSS}-{prefix}.log` — **mandatory** whenever any controller layer is added or changed (new endpoint, modified endpoint, removed endpoint). Document every affected endpoint as a ready-to-import curl command in `.md` format. Skip only when zero controller files are touched.
 8. **Complete** — update task to `STATUS: COMPLETE` with build result
 
 Templates are at `ai-dlc/templates/`.
 
+---
+
 ## Project Overview
 
-This is the central orchestration hub for the Socialic platform. It manages the full content lifecycle — creation, scheduling, platform publishing, file management, AI agents, comments, and engagement metrics.
+This is the **Internet Banking Concept** — a microservices-based internet banking platform. It manages user registration, authentication, fund transfers, utility payments, and account management across independently deployable Spring Boot services.
+
+**Modules:**
+
+| Service | Port | Responsibility |
+|:---|:---|:---|
+| `internet-banking-service-registry` | 8081 | Netflix Eureka — service discovery |
+| `internet-banking-api-gateway` | 8082 | Spring Cloud Gateway — routing + OAuth2/JWT security |
+| `internet-banking-user-service` | 8083 | User registration, profile management, Keycloak integration |
+| `internet-banking-fund-transfer-service` | 8084 | Fund transfers between accounts |
+| `internet-banking-utility-payment-service` | 8085 | Utility bill payments |
+| `internet-banking-config-server` | 8090 | Spring Cloud Config Server — centralised configuration |
+| `core-banking-service` | 8092 | Core banking: accounts, transactions, user data |
 
 **Core Stack:**
 * Java 21
 * Spring Boot 3.2.4
+* Spring Cloud 2023.0.0
 * Gradle
-* MongoDB (Spring Data MongoDB)
-* RabbitMQ (AMQP)
-* AWS S3, SQS, KMS (SDK v2)
-* Pusher (WebSocket notifications)
-* OpenFeign (inter-service HTTP)
+* MySQL (Spring Data JPA)
+* Flyway (database migrations — `core-banking-service` only)
 * Netflix Eureka (service discovery)
-* Docker
+* Spring Cloud Gateway (reactive, with WebFlux)
+* Spring Cloud Config (centralised config)
+* OpenFeign (inter-service HTTP calls)
+* Keycloak 23 (identity provider — OAuth2/JWT)
+* Micrometer + Zipkin (distributed tracing)
+* Springdoc OpenAPI / Swagger UI
 * Lombok
+* Docker / Docker Compose
 
 ---
 
 ## Build & Run Commands
 
+Each service is an independent Gradle project. Run commands from within the service directory.
+
 ```bash
-# Build (excluding tests)
+# Build (excluding tests) — run from within a service directory
 ./gradlew build -x test
 
 # Run tests
 ./gradlew test
 
 # Run a single test class
-./gradlew test --tests "com.avron.socialic.SomeTestClass"
+./gradlew test --tests "com.javatodev.finance.SomeTestClass"
 
-# Code quality checks
-./gradlew pmdMain          # PMD static analysis (config: config/pmd/ruleset.xml)
-./gradlew checkstyleMain   # Checkstyle validation (config: config/checkstyle/checkstyle.xml)
-./gradlew sonarqube        # SonarQube analysis
-
-# Run the application (requires env vars — see Required Environment Variables below)
+# Run the application
 ./gradlew bootRun
 ```
 
----
+**Profiles:**
+* `dev` — local development (bootstrap-dev.yml)
+* `docker` — containerised (bootstrap-docker.yml)
 
-## Required Environment Variables
-
+**Docker Compose** — starts the full platform including Keycloak, MySQL, Zipkin, and all services:
 ```bash
-# MongoDB
-SOCIALIC_APP_DB_USERNAME
-SOCIALIC_APP_DB_PASSWORD
-
-# RabbitMQ
-SOCIALIC_APP_RABBITMQ_HOST
-SOCIALIC_APP_RABBITMQ_USERNAME
-SOCIALIC_APP_RABBITMQ_PASSWORD
-
-# AWS
-SOCIALIC_APP_AWS_ACCESS_KEY
-SOCIALIC_APP_AWS_SECRET_KEY
-SOCIALIC_APP_AWS_REGION
-
-# Pusher
-SOCIALIC_APP_CONFIG_PUSHER_SECRET
+docker-compose -f docker-compose/docker-compose.yml up
 ```
 
 ---
 
 ## Package Structure
 
+All services share the base package `com.javatodev.finance`. Per-service structure:
+
+### core-banking-service
 ```
-com.avron.socialic/
-├── config/              # Spring configurations (MQ, AWS, Feign, Pusher, Security filters)
-│   ├── amazon/          # AWS S3, SQS, KMS client beans
-│   ├── exception/       # GlobalExceptionHandler, ErrorResponse
-│   ├── feign/           # Feign config, interceptor, error decoder
-│   ├── filter/          # AppAuthUserFilter, CorrelationIdFilter, ApiRequestContext
-│   ├── mq/              # RabbitMqConfig (queues, exchanges, bindings)
-│   ├── props/           # AmazonCoreProperties, S3, SQS property classes
-│   ├── pusher/          # PusherConfig
-│   └── subcription/     # SubscriptionLimitConfig, LimitData
-├── controller/          # 7 REST controllers (no business logic)
-├── service/             # 24+ services (business logic layer)
-│   ├── agent/           # AgentService
-│   ├── comment/         # SocialCommentService, CommentSyncProcessor
-│   ├── kms/             # KmsEncryptionService
-│   ├── linkedin/        # LinkedinPublisherService
-│   ├── meta/            # MetaContentPublisherService
-│   ├── metrics/         # ContentMetricsService, MetricsSyncProcessor
-│   ├── mq/              # MessageQueueDataProcessor, MessageQueueDataPublisher
-│   ├── pinterest/       # PinterestPublisherService
-│   ├── pusher/          # PusherDataService
-│   ├── s3/              # S3FileService, S3ContentCreationService
-│   ├── subscription/    # SubscriptionBasedValidationService
-│   ├── threads/         # ThreadsPublisherService
-│   ├── tiktok/          # TiktokPublisherService
-│   ├── youtube/         # YoutubePublisherService
-│   └── validator/       # Strategy-pattern validators per platform
-├── exception/           # 15 custom exception types
-├── model/               # All DTOs, entities, mappers, repositories
-│   ├── agent/           # Agent + GeneratedPost (dto/entity/mapper/repository)
-│   ├── analytics/
-│   ├── bulk/            # BulkContent (dto/entity/mapper/repository)
-│   ├── comment/         # SocialComment (dto/entity/mapper/repository/enums)
-│   ├── common/          # PageResponse, SortOrder, AuditAware, BaseMapper
-│   ├── connector/       # ConnectorApiClient (Feign), Channel DTOs
-│   ├── content/         # SocialContent (dto/entity/mapper/repository) — main model
-│   ├── file/            # File (dto/entity/mapper/repository)
-│   ├── metrics/         # ContentMetrics (dto/entity/repository)
-│   ├── paddle/          # Subscription/billing DTOs
-│   ├── plugin/          # PluginContent (dto/entity/mapper/repository)
-│   ├── publisher/       # Meta, Pinterest, TikTok platform-specific DTOs + Feign clients
-│   ├── usage/
-│   └── user/            # UserApiClient (Feign), SocialicUser DTO
-└── util/                # StringUtil, FileUtils, TimeUtils, ChannelDataUtil, etc.
+com.javatodev.finance/
+├── controller/
+│   ├── AccountController       (/api/v1/account)
+│   ├── TransactionController
+│   └── UserController
+├── service/
+│   ├── AccountService
+│   ├── TransactionService
+│   └── UserService
+├── model/
+│   ├── dto/                    # BankAccount, Transaction, User, UtilityAccount, request/*, response/*
+│   ├── entity/                 # BankAccountEntity, TransactionEntity, UserEntity, UtilityAccountEntity
+│   └── mapper/                 # BankAccountMapper, UserMapper, UtilityAccountMapper, BaseMapper
+├── repository/                 # BankAccountRepository, TransactionRepository, UserRepository, UtilityAccountRepository
+├── exception/                  # SimpleBankingGlobalException, EntityNotFoundException, InsufficientFundsException, ...
+└── resources/
+    └── db/migration/           # Flyway SQL scripts
+```
+
+### internet-banking-user-service
+```
+com.javatodev.finance/
+├── controller/
+│   └── UserController          (/api/v1/bank-users)
+├── service/
+│   ├── UserService
+│   ├── KeycloakUserService
+│   └── rest/BankingCoreRestClient   (Feign client → core-banking-service)
+├── model/
+│   ├── dto/                    # User, UserUpdateRequest, AuditAware, Status
+│   ├── entity/                 # UserEntity
+│   ├── mapper/                 # UserMapper, BaseMapper
+│   ├── repository/             # UserRepository
+│   └── rest/response/          # UserResponse, AccountResponse
+├── configuration/
+│   ├── audit/                  # AuditConfig, AuditorAwareConfig
+│   ├── feign/                  # CustomFeignClientConfiguration, CustomFeignErrorDecoder
+│   ├── filter/                 # AppAuthUserFilter, ApiRequestContext, ApiRequestContextHolder
+│   └── keycloak/               # KeycloakManager, KeycloakProperties
+└── exception/                  # SimpleBankingGlobalException, EntityNotFoundException, ...
+```
+
+### internet-banking-fund-transfer-service
+```
+com.javatodev.finance/
+├── controller/
+│   └── FundTransferController
+├── service/
+│   ├── FundTransferService
+│   └── rest/client/BankingCoreFeignClient   (Feign client → core-banking-service)
+├── model/
+│   ├── dto/                    # FundTransfer, AuditAware, request/*, response/*
+│   ├── entity/                 # FundTransferEntity
+│   ├── mapper/                 # FundTransferMapper, BaseMapper
+│   └── repository/             # FundTransferRepository
+├── configuration/              # CustomFeignClientConfiguration, audit/*, filter/*
+└── exception/
+```
+
+### internet-banking-utility-payment-service
+```
+com.javatodev.finance/
+├── controller/
+│   └── UtilityPaymentController
+├── service/
+│   ├── UtilityPaymentService
+│   └── rest/BankingCoreRestClient   (Feign client → core-banking-service)
+├── model/
+│   ├── dto/                    # UtilityPayment, AuditAware
+│   ├── entity/                 # UtilityPaymentEntity
+│   ├── mapper/                 # UtilityPaymentMapper, BaseMapper
+│   ├── repository/             # UtilityPaymentRepository
+│   └── rest/                   # request/*, response/*
+├── configuration/              # CustomFeignClientConfiguration, audit/*, filter/*
+└── exception/
+```
+
+### internet-banking-api-gateway
+```
+com.javatodev.finance/
+└── configuration/
+    ├── GatewayConfiguration         # Route definitions
+    └── security/SecurityConfiguration  # OAuth2 resource server + security filter chain
+```
+
+### internet-banking-config-server
+```
+com.javatodev.finance/
+└── InternetBankingConfigServerApplication  # @EnableConfigServer entry point
+```
+
+### internet-banking-service-registry
+```
+com.javatodev.finance/
+└── InternetBankingServiceRegistryApplication  # @EnableEurekaServer entry point
 ```
 
 ---
@@ -163,9 +218,10 @@ Example:
 ```java
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class FundTransferService {
 
-    private final UserRepository userRepository;
+    private final FundTransferRepository fundTransferRepository;
+    private final BankingCoreFeignClient bankingCoreFeignClient;
 
 }
 ```
@@ -181,35 +237,34 @@ Controllers should:
 * Contain no business logic.
 * Delegate work to services.
 * Validate requests.
+* Use `@Slf4j`, `@Tag` (Swagger), and `@Operation` annotations.
 
-Base API path: `/api/v1/`
+Base API paths per service:
 
-Existing controllers:
-
-| Controller | Base Path | Key Operations |
-|:---|:---|:---|
-| `ContentController` | `/api/v1/contents` | CRUD, bulk creation, cross-posting, scheduling |
-| `CommentController` | `/api/v1/contents/{contentId}/comments` | Comment CRUD + platform sync |
-| `FileManagerController` | `/api/v1/file-manager` | File upload, presigned URLs |
-| `AgentController` | `/api/v1/agents` | AI agent + generated post management |
-| `MetricsController` | `/api/v1/metrics` | Engagement metrics |
-| `AnalyticsController` | `/api/v1/analytics` | Analytics queries |
-| `PluginDataController` | `/api/v1/plugins` | Plugin-initiated content |
+| Service | Base Path |
+|:---|:---|
+| `core-banking-service` | `/api/v1/account`, `/api/v1/transaction`, `/api/v1/user` |
+| `internet-banking-user-service` | `/api/v1/bank-users` |
+| `internet-banking-fund-transfer-service` | `/api/v1/fund-transfer` |
+| `internet-banking-utility-payment-service` | `/api/v1/utility-payment` |
 
 Example:
 
 ```java
+@Slf4j
+@Tag(name = "Fund Transfer Controller", description = "APIs for managing fund transfers")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/api/v1/fund-transfer")
+public class FundTransferController {
 
-    private final UserService userService;
+    private final FundTransferService fundTransferService;
 
-    @GetMapping("/{id}")
-    public UserResponse getUser(
-            @PathVariable Long id) {
-        return userService.getUser(id);
+    @Operation(summary = "Initiate Fund Transfer")
+    @PostMapping
+    public ResponseEntity<FundTransferResponse> fundTransfer(@RequestBody FundTransferRequest request) {
+        log.info("Initiating fund transfer for request {}", request);
+        return ResponseEntity.ok(fundTransferService.fundTransfer(request));
     }
 }
 ```
@@ -218,114 +273,67 @@ public class UserController {
 
 Services should:
 
-* Contain business logic.
+* Contain all business logic.
 * Be transaction boundaries.
-* Not expose entities directly.
+* Not expose entities directly — use mappers.
 
 ### Repositories
 
-* Use Spring Data MongoDB (not JPA).
-* Follow the two-layer pattern described in the **Repository Pattern** section.
-* Use mappers appropriately to map DTO → Entity and vice versa.
-
-### Response Format
-
-All response messages must come from `messages/response/messages.properties` — never hardcode.
-
-Success:
-
-```json
-{
-  "data": {}
-}
-```
-
-Error: Error messages must come from `messages/exception/messages.properties`.
-
-```json
-{
-  "code": "USER_NOT_FOUND",
-  "message": "User not found"
-}
-```
+* Use Spring Data JPA (`JpaRepository`).
+* Keep repositories interface-only unless custom `@Query` is needed.
+* Services inject repositories directly — no custom base repository layer needed.
 
 ---
 
 ## Validation
 
-Always validate incoming requests. When building a feature, ask the user about validations and confirm before applying.
+Always validate incoming requests using Bean Validation annotations.
 
 Example:
 
 ```java
-public record CreateUserRequest(
+public record FundTransferRequest(
 
         @NotBlank
-        String name,
+        String fromBankAccountNumber,
 
-        @Email
-        String email
+        @NotBlank
+        String toBankAccountNumber,
+
+        @NotNull
+        @Positive
+        BigDecimal amount
 ) {}
 ```
-
-### Platform-Specific Content Validation
-
-Content validation uses the **Strategy Pattern** with per-platform validators. Limits are configured in `application.yml` under `validation.strategy.*`:
-
-| Platform | Key Limits |
-|:---|:---|
-| Instagram | Max 10 images, 1 video, or 10 mixed; description ≤ 2200 chars |
-| Facebook | Max 10 images, 1 video, or 10 mixed; description ≤ 63206 chars |
-| TikTok | Video only or carousel (max 35 images); description ≤ 2200 chars |
-| Pinterest | Max 35 images; title ≤ 100, description ≤ 500, alt-text ≤ 500 |
-| YouTube | Single video only; category ID required; description ≤ 5000 chars |
-| LinkedIn Profile | Max 1 image or 1 video; description ≤ 3000 chars |
-| LinkedIn Page | Same limits as profile, organization variant |
-| Threads | Max 1 image OR 1 video (no mixed); description ≤ 500 chars |
-
-**Key classes:**
-- `SocialContentValidator` — orchestrates validation
-- `ValidationStrategyFactory` — creates the right validator by `ChannelType`
-- `AbstractValidationStrategy` — base class for all validators
-- `ValidationHelper` — shared utility methods
 
 ---
 
 ## Exception Handling
 
-Use centralized exception handling via `GlobalExceptionHandler` in `config/exception/`.
+Use centralized exception handling via `GlobalExceptionHandler` in the `exception/` package of each service.
 
-```java
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+**Base exception class:** `SimpleBankingGlobalException extends RuntimeException`
 
+**Exception hierarchy** (per service, all extend `SimpleBankingGlobalException`):
+
+```
+SimpleBankingGlobalException
+├── EntityNotFoundException
+├── InsufficientFundsException          (core-banking-service)
+├── InvalidBankingUserException         (internet-banking-user-service)
+├── InvalidEmailException               (internet-banking-user-service)
+└── UserAlreadyRegisteredException      (internet-banking-user-service)
+```
+
+Error response format:
+```json
+{
+  "code": "ENTITY_NOT_FOUND",
+  "message": "Bank account not found"
 }
 ```
 
-Never expose stack traces to clients.
-
-**Exception hierarchy** (all extend `SocialicGlobalException`):
-
-```
-SocialicGlobalException
-├── EntityNotFoundException
-├── InvalidChannelsException
-├── InvalidContentStatusException
-├── ContentLimitExceedException
-├── ContentSpaceExceedException
-├── InvalidMediaTypeException
-├── FileProcessingException
-├── DataMapperException
-├── FeignClientException
-├── MQMessageHandlingException
-├── SQSMessageProcessingException
-├── BulkCreationValidationException
-├── BulkCreationProcessingException
-├── EmptyBulkContentException
-└── AgentDataCreationCommonException
-```
-
-All exception messages go in `messages/exception/messages.properties`.
+Never expose stack traces to clients. `GlobalExceptionHandler` handles both `SimpleBankingGlobalException` subtypes and unexpected `Exception`.
 
 ---
 
@@ -334,92 +342,126 @@ All exception messages go in `messages/exception/messages.properties`.
 Use structured logging with `@Slf4j` (Lombok).
 
 Good:
-
 ```java
-log.info("User created. userId={}", userId);
+log.info("Initiating fund transfer. from={}, to={}, amount={}", fromAccount, toAccount, amount);
 ```
 
 Bad:
-
 ```java
-System.out.println("User created");
+System.out.println("Transfer started");
 ```
 
 Rules:
-
 * INFO for business events
 * WARN for recoverable issues
 * ERROR for failures
-* Never log secrets
-* Correlation ID is automatically added to MDC via `CorrelationIdFilter` and appears in every log line as `[X-Correlation-ID]`
+* Never log secrets or PII
 
 ---
 
 ## Database
 
-### MongoDB (Spring Data MongoDB)
+### MySQL (Spring Data JPA)
 
-This service uses **MongoDB**, not relational JPA. There are no SQL migrations or Flyway.
+Services that use JPA: `core-banking-service`, `internet-banking-user-service`, `internet-banking-fund-transfer-service`, `internet-banking-utility-payment-service`.
 
-**Database:** `socialic-social-content-database` on MongoDB Atlas
+**Flyway migrations** are used only in `core-banking-service` under `src/main/resources/db/migration/`.
 
-**Collections and their entities:**
+Migration naming: `V1.0.{timestamp}__{description}.sql`
 
-| Entity Class | Collection | Purpose |
+**Tables per service:**
+
+| Entity | Table | Service |
 |:---|:---|:---|
-| `SocialContentEntity` | `social_contents` | Main content posts |
-| `BulkContentEntity` | `bulk_contents` | Bulk creation jobs |
-| `FileEntity` | `files` | File metadata |
-| `FileStatsEntity` | (implicit) | File usage statistics |
-| `AgentEntity` | `agents` | AI agent configurations |
-| `GeneratedPostEntity` | (implicit) | AI-generated post drafts |
-| `SocialCommentEntity` | `social_comments` | Content comments |
-| `PluginContentEntity` | (implicit) | Plugin-initiated content |
-| `ContentMetricsEntity` | (implicit) | Engagement metrics |
+| `UserEntity` | `banking_core_user` | core-banking-service |
+| `BankAccountEntity` | `banking_core_account` | core-banking-service |
+| `UtilityAccountEntity` | `banking_core_utility_account` | core-banking-service |
+| `TransactionEntity` | transactions table | core-banking-service |
+| `UserEntity` | user table | internet-banking-user-service |
+| `FundTransferEntity` | fund_transfer table | internet-banking-fund-transfer-service |
+| `UtilityPaymentEntity` | utility_payment table | internet-banking-utility-payment-service |
 
 ### Entity Guidelines
 
 * Keep entities persistence-focused.
 * Avoid business logic inside entities.
-* All entities extend `AuditAware` which provides `createdBy`, `createdAt`, `modifiedBy`, `modifiedAt` via Spring Data auditing.
-* Use String IDs (MongoDB ObjectId).
+* Use Lombok on entities.
+* Use `Long` IDs with `@GeneratedValue(strategy = GenerationType.IDENTITY)`.
 
 Example:
 
 ```java
-@Document(collection = "users")
-public class UserEntity extends AuditAware {
+@Entity
+@Table(name = "banking_core_account")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class BankAccountEntity {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
 }
 ```
 
-### Repository Pattern
+### Test Database
 
-Every entity uses a **two-layer repository pattern**:
+Tests use **H2 in-memory** database. Each service has `src/test/resources/application.yml` configuring H2.
 
-1. **`*MongoRepository`** — Spring Data interface (basic CRUD + simple queries)
-2. **`*BaseRepository`** — Custom class wrapping complex logic, implements separate `*ReadDB` and `*WriteDB` interfaces
+---
+
+## Inter-Service Communication
+
+Services communicate via **OpenFeign** (declarative REST clients).
+
+`internet-banking-user-service`, `internet-banking-fund-transfer-service`, and `internet-banking-utility-payment-service` call `core-banking-service` for account data.
+
+Feign clients go in `service/rest/` or `service/rest/client/`.
 
 Example:
-```
-FileMongoRepository      (extends MongoRepository)
-FileBaseRepository       (implements FileReadDB, FileWriteDB)
-  └── FileReadDB         (interface for read operations)
-  └── FileWriteDB        (interface for write operations)
+
+```java
+@FeignClient(name = "core-banking-service", configuration = CustomFeignClientConfiguration.class)
+public interface BankingCoreFeignClient {
+
+    @GetMapping("/api/v1/account/bank-account/{accountNumber}")
+    BankAccount getBankAccount(@PathVariable("accountNumber") String accountNumber);
+
+}
 ```
 
-Services inject the `*BaseRepository`, not the `*MongoRepository` directly.
+---
 
 ## Security
 
+* The API gateway (`internet-banking-api-gateway`) enforces OAuth2/JWT authentication using **Keycloak** as the identity provider.
+* Downstream services receive user identity via `AppAuthUserFilter` (reads JWT claims from the forwarded `Authorization` header).
+* `ApiRequestContext` / `ApiRequestContextHolder` hold the request-scoped user principal within services.
 * Never hardcode secrets.
-* Read secrets from environment variables.
+* Read secrets from environment variables or Spring Cloud Config.
 * Validate all inputs.
-* Sanitize logs.
 * Follow OWASP recommendations.
+
+---
+
+## Distributed Tracing
+
+All services include **Micrometer + Zipkin** for distributed tracing:
+
+* `spring-boot-starter-actuator`
+* `micrometer-tracing-bridge-brave`
+* `zipkin-reporter-brave`
+
+Zipkin UI runs at `http://localhost:9411`.
+
+---
+
+## Documentation (Swagger)
+
+All services expose Swagger UI via **springdoc-openapi**. Controllers must use `@Tag` and `@Operation` annotations.
 
 ---
 
@@ -428,19 +470,9 @@ Services inject the `*BaseRepository`, not the `*MongoRepository` directly.
 Before implementing:
 
 1. Consider query count.
-2. Avoid N+1 queries.
-3. Use pagination.
+2. Avoid N+1 queries — use JPA `@Query` with joins when needed.
+3. Use pagination for list endpoints (`Pageable`).
 4. Cache only when justified.
-
----
-
-## Documentation
-
-When generating code:
-
-* Add JavaDoc for public APIs.
-* Explain complex logic.
-* Keep comments concise.
 
 ---
 
@@ -450,18 +482,17 @@ Claude should:
 
 1. Produce complete compilable code.
 2. Include imports.
-3. Follow existing package structure (`com.avron.socialic`).
+3. Follow existing package structure (`com.javatodev.finance`).
 4. Prefer maintainability over brevity.
 5. Explain architectural decisions when relevant.
-6. Generate tests alongside business logic.
+6. Generate tests alongside business logic (JUnit 5 + Mockito + H2).
 7. Avoid introducing unnecessary libraries.
 8. Follow project conventions before introducing new patterns.
 9. Use `@Slf4j` for logging (Lombok).
 10. Use `@RequiredArgsConstructor` with constructor injection only.
-11. New exception types go in `exception/` package and must extend `SocialicGlobalException`.
-12. New exception messages go in `messages/exception/messages.properties`.
-13. New response messages go in `messages/response/messages.properties`.
-14. New validators extend `AbstractValidationStrategy` and register in `ValidationStrategyFactory`.
+11. New exception types go in the `exception/` package and must extend `SimpleBankingGlobalException`.
+12. Flyway migrations go in `core-banking-service/src/main/resources/db/migration/` only.
+13. Feign clients go in `service/rest/` or `service/rest/client/`.
 
 ---
 
@@ -473,7 +504,7 @@ When asked to implement a feature:
 2. Show affected files.
 3. Generate complete code.
 4. Include tests.
-5. Mention database changes if needed.
+5. Mention database/schema changes if needed.
 6. Mention configuration changes if needed.
 
 Always assume this is a production system.

@@ -23,7 +23,7 @@ Dead-letter setup : {DLX exchange + DLQ name, or "none"}
 
 ROUTING KEY 1: {routing.key.value}
 -----------------------------------
-Queue(s) bound       : {e.g. SOCIALIC_USER_DATA_QUEUE}
+Queue(s) bound       : {e.g. BANKING_FUND_TRANSFER_QUEUE}
 Direction            : Producer = {service name} | Consumer(s) = {service name(s)}
 Producer status      : {IMPLEMENTED | NOT YET IMPLEMENTED — see RISKS}
 Trigger              : {what business action causes this to be published}

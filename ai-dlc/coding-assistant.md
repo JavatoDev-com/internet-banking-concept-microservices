@@ -54,7 +54,7 @@ A plan is clear enough when you know: what changes, in which layer/platform, and
 Ask only the questions that are actually blocking you from starting. Be specific and direct. Do not ask for information you can derive from the codebase yourself.
 
 Examples of valid clarifying questions:
-- "Should this affect all platforms or only Threads?"
+- "Should this affect all services or only the fund-transfer service?"
 - "Do you want a new endpoint or should this happen inside the existing token refresh flow?"
 - "Is this additive or does it replace the current behaviour in `AuthDataProcessorService`?"
 
@@ -117,15 +117,16 @@ Implement the change. Follow existing codebase patterns. If you discover somethi
 Write unit tests alongside any new service/repository/filter business logic. Use JUnit 5 + Mockito + AssertJ — already available via `spring-boot-starter-test`, no new test dependency needed. Mirror the main package structure under `src/test/java`.
 
 - **Service classes**: mock collaborators with `@Mock`/`@InjectMocks` (Mockito). No real Spring context needed.
-- **Repository classes** (two-layer `*BaseRepository implements *ReadDB, *WriteDB` pattern): instantiate the concrete `*BaseRepository` directly with a mocked `*MongoRepository` (via its Lombok-generated constructor) to test default-method business logic without a real or embedded MongoDB.
+- **Repository classes** (Spring Data JPA `JpaRepository`): use H2 in-memory database for integration-style repository tests, or mock the repository interface with Mockito when testing service logic.
 - **Filters**: mock `HttpServletRequest`/`HttpServletResponse`/`FilterChain` directly. No servlet container needed.
-- **Controller-layer (`@WebMvcTest`) and real/embedded-Mongo integration tests** are a separate, larger decision — don't add them casually alongside a routine feature. Raise it explicitly with the user if broader coverage is wanted.
+- **Controller-layer (`@WebMvcTest`) and full integration tests** are a separate, larger decision — don't add them casually alongside a routine feature. Raise it explicitly with the user if broader coverage is wanted.
+- Tests run against H2 in-memory database (configured in `src/test/resources/application.yml` in each service).
 
 ---
 
 ### Step 6 — Build Verification
 
-Run:
+Run from within the affected service directory (e.g. `cd core-banking-service`):
 
 ```bash
 ./gradlew clean build
@@ -133,6 +134,7 @@ Run:
 
 - **PASS** → record `BUILD_RESULT: PASS` in the task file, continue to Step 7.
 - **FAIL** → fix all errors, re-run. Do not mark complete until green. Do not comment out code or skip checks.
+- If multiple services were modified, run the build for each affected service separately.
 
 ---
 
@@ -167,7 +169,7 @@ curl --location 'http://localhost:8080/api/v1/example' \
 
 If this session introduced or changed **any** MQ contract element — a new queue, a new exchange, a new routing key, a new or changed event/message schema, or a change in who produces vs. consumes a message — create `ai-dlc/mq-contracts/mqc-{unix_epoch}_{HHMMSS}-{prefix}.log` using **the same timestamp** as the decision log/task file for this session, and the template at `ai-dlc/templates/mq-contract.template.log`.
 
-This file is the artifact handed to other API teams (e.g. socialic-user-service, socialic-connector-service) who need to produce or consume these messages. It must capture, per routing key:
+This file is the artifact handed to other teams (e.g. core-banking-service, internet-banking-fund-transfer-service) who need to produce or consume these messages. It must capture, per routing key:
 - Exchange, queue, and routing key names (exact strings, not just the `application.yml` property key)
 - Direction: which service produces, which service(s) consume
 - Full payload schema (field name, type, required/optional, meaning)
@@ -253,7 +255,7 @@ ai-dlc/
 | Same timestamp | DL, task file, api-contract, and mq-contract share the exact same `{ts}_{time}` prefix |
 | Dedupe check | Before creating new files, search for an existing DL/task on the same requirement; confirm with the user whether to amend or create new — established 2026-07-22 |
 | One file per requirement | Amend the existing DL/task/contract file forward instead of creating a new one for the same requirement — established 2026-07-22 |
-| Build must pass | `./gradlew clean build` green before COMPLETE — no exceptions |
+| Build must pass | `./gradlew clean build` green (run from within each affected service directory) before COMPLETE — no exceptions |
 | Tests alongside code | New service/repository/filter logic ships with JUnit5/Mockito unit tests — established 2026-07-22 |
 | API contracts mandatory | Any controller add/change/delete → api-contract file required before marking COMPLETE |
 | MQ contract on MQ changes | Any new/changed queue, exchange, routing key, or event schema → `ai-dlc/mq-contracts/mqc-{ts}_{time}-{prefix}.log` before COMPLETE — established 2026-07-22 |
