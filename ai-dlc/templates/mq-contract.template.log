@@ -1,0 +1,77 @@
+================================================================================
+MQ CONTRACT
+================================================================================
+File        : mqc-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+Author      : {author name}
+Date        : {YYYY-MM-DD HH:MM}
+Related DL  : dl-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+Related Task: task-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+================================================================================
+
+PURPOSE
+-------
+{One paragraph: what business event this contract communicates, and why
+ other services need it (what they should do on receipt / when they should
+ publish it).}
+
+
+BROKER TOPOLOGY
+----------------
+Exchange (type)   : {e.g. topic.exchange (topic)}
+Dead-letter setup : {DLX exchange + DLQ name, or "none"}
+
+
+ROUTING KEY 1: {routing.key.value}
+-----------------------------------
+Queue(s) bound       : {e.g. BANKING_FUND_TRANSFER_QUEUE}
+Direction            : Producer = {service name} | Consumer(s) = {service name(s)}
+Producer status      : {IMPLEMENTED | NOT YET IMPLEMENTED — see RISKS}
+Trigger              : {what business action causes this to be published}
+
+Payload schema:
+| Field | Type | Required | Meaning |
+|-------|------|----------|---------|
+| {field} | {type} | {yes/no} | {description} |
+
+Example payload:
+```json
+{
+  "field": "value"
+}
+```
+
+Ack / retry / error handling:
+- {e.g. manual ack, dead-lettered on nack, must be idempotent because X}
+
+Idempotency / ordering notes:
+- {e.g. consumer must tolerate duplicate delivery / out-of-order delivery — how}
+
+
+ROUTING KEY 2: {routing.key.value}
+-----------------------------------
+{Repeat the same structure as Routing Key 1 for each additional key this
+ contract introduces or changes.}
+
+
+CONSUMER INTEGRATION NOTES
+---------------------------
+{Anything a team implementing the producer or an additional consumer needs
+ to know that isn't obvious from the schema alone — auth/org resolution
+ expectations, rate limits, message size limits, versioning approach for
+ future schema changes, etc.}
+
+
+RISKS & OPEN FOLLOW-UPS
+------------------------
+- {e.g. "Producer not yet implemented in service X — this contract is the
+  spec for that follow-up work."}
+- {Any other known gap or risk}
+
+
+================================================================================
+AMENDMENTS (added when the contract changes after publication)
+================================================================================
+{Date + reason for any change to routing keys, schema, or semantics after
+ this contract was first shared. Schema changes must be additive/backward
+ compatible unless explicitly coordinated with all consuming teams.}
+================================================================================

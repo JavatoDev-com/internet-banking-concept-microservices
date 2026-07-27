@@ -1,0 +1,69 @@
+================================================================================
+DECISION LOG
+================================================================================
+File        : dl-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+Author      : {author name}
+Date        : {YYYY-MM-DD HH:MM}
+Related Task: task-{unix_epoch_seconds}_{HHMMSS}-{short-prefix}.log
+================================================================================
+
+PURPOSE
+-------
+{Describe what is being built or changed and the problem it solves.}
+
+
+QUESTIONS & ANSWERS
+-------------------
+Q1: {question asked by Claude}
+A1: {user's answer}
+
+Q2: {question asked by Claude}
+A2: {user's answer}
+
+Q3: {question asked by Claude}
+A3: {user's answer}
+
+{Add more Q&A pairs as needed.}
+
+
+DECISIONS MADE
+--------------
+1. {Decision — state the choice made, not just the topic}
+2. {Decision}
+3. {Decision}
+
+
+ALTERNATIVES CONSIDERED
+-----------------------
+- {Alternative A}: {Why it was rejected}
+- {Alternative B}: {Why it was rejected}
+
+
+SCOPE OF CHANGES
+----------------
+Affected services: {core-banking-service / internet-banking-user-service / internet-banking-fund-transfer-service / internet-banking-utility-payment-service / internet-banking-api-gateway / ...}
+Affected layers  : {controller / service / model / config / repository / exception / ...}
+New endpoints    : {list or "none"}
+Schema changes   : {MySQL table/column changes or Flyway migration or "none"}
+New dependencies : {library additions or "none"}
+
+
+RISKS & NOTES
+-------------
+- {Risk or constraint to be aware of during implementation}
+- {Note about production impact}
+
+
+ACCEPTANCE CRITERIA
+-------------------
+- [ ] {Criterion 1}
+- [ ] {Criterion 2}
+- [ ] {Criterion 3}
+
+
+================================================================================
+AMENDMENTS (added during or after implementation)
+================================================================================
+{If any decisions changed once implementation started, record them here with
+ date and reason. Leave blank if no amendments.}
+================================================================================
