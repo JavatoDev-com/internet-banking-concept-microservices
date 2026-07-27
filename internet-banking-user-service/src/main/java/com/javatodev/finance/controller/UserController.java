@@ -2,7 +2,6 @@ package com.javatodev.finance.controller;
 
 import com.javatodev.finance.model.dto.User;
 import com.javatodev.finance.model.dto.UserUpdateRequest;
-import com.javatodev.finance.service.KeycloakUserService;
 import com.javatodev.finance.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;

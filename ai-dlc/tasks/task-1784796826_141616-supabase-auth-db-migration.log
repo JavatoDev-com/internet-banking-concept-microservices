@@ -1,0 +1,96 @@
+================================================================================
+TASK
+================================================================================
+File        : task-1784796826_141616-supabase-auth-db-migration.log
+Author      : chindin99x
+Created     : 2026-07-23 14:16
+Related DL  : dl-1784796826_141616-supabase-auth-db-migration.log
+
+STATUS      : IN_PROGRESS
+================================================================================
+
+TITLE
+-----
+Migrate authentication to Supabase Auth and database to PostgreSQL
+
+
+DESCRIPTION
+-----------
+Replace Keycloak + MySQL with Supabase Auth + PostgreSQL across all backend
+services and the Next.js frontend. Backend services switch from the Keycloak
+Admin Client library to direct HTTP calls via Spring RestClient against the
+Supabase Admin Auth API. All four data services replace mysql-connector-j with
+the PostgreSQL driver. Core-banking Flyway migrations are rewritten for PostgreSQL
+syntax. Docker-compose removes Keycloak and MySQL containers and adds a local
+PostgreSQL container with Supabase env-var overrides. The frontend replaces
+NextAuth KeycloakProvider with a Credentials provider backed by Supabase.
+
+
+ACCEPTANCE CRITERIA
+-------------------
+- [x] KeycloakManager, KeycloakProperties, KeycloakUserService removed from user-service
+- [x] SupabaseProperties and SupabaseAuthService created in user-service
+- [x] UserService updated to use SupabaseAuthService
+- [x] internet-banking-user-service build passes
+- [x] core-banking-service: flyway-mysql removed, postgresql added, migrations rewritten
+- [x] core-banking-service build passes
+- [x] internet-banking-fund-transfer-service: mysql replaced with postgresql; build passes
+- [x] internet-banking-utility-payment-service: mysql replaced with postgresql; build passes
+- [x] docker-compose: keycloak + MySQL removed; postgres_app_db added; env vars set
+- [x] Frontend: email/password login form; Supabase credentials provider; package.json updated
+- [x] Build passes: ./gradlew clean build (for each affected service)
+
+
+IMPLEMENTATION PLAN
+-------------------
+1. Create DL and task files (this file)
+2. user-service/build.gradle: remove keycloak-admin-client and mysql-connector-j, add postgresql
+3. Delete KeycloakManager.java, KeycloakProperties.java, KeycloakUserService.java
+4. Create configuration/supabase/SupabaseProperties.java
+5. Create service/SupabaseAuthService.java with Supabase Admin API HTTP calls
+6. Update service/UserService.java to inject SupabaseAuthService; remove Keycloak types
+7. Update user-service test application.yml: replace keycloak config with supabase config
+8. core-banking-service/build.gradle: remove flyway-mysql and mysql, add postgresql
+9. Rewrite V1.0...create_base_table_structure.sql for PostgreSQL
+10. Rewrite V1.0...temp_data.sql: remove MySQL-qualified table names, add sequence reset
+11. Rewrite V1.0...create_transaction_table.sql for PostgreSQL
+12. fund-transfer-service/build.gradle: replace mysql with postgresql
+13. utility-payment-service/build.gradle: replace mysql with postgresql
+14. docker-compose: remove keycloak + mysql, add postgres_app_db; add env var overrides
+15. Create docker-compose/postgres/init.sql to create all 4 databases
+16. Frontend: add @supabase/supabase-js to package.json
+17. Frontend: update src/lib/auth.ts — replace KeycloakProvider with Credentials + Supabase
+18. Frontend: update src/app/login/page.tsx — email/password form
+19. Frontend: update .env.local — replace Keycloak vars with Supabase vars
+20. Build each affected service: ./gradlew clean build
+
+
+IMPLEMENTATION NOTES
+--------------------
+- RestClient.Builder injected into SupabaseAuthService (Spring Boot auto-configures it)
+- Supabase Admin API filter is a text search; exact email match done in Java after fetch
+- PostgreSQL BIGSERIAL used for auto-increment columns (replaces MySQL AUTO_INCREMENT)
+- Temp-data migration resets sequences after explicit-ID inserts via setval()
+- NextAuth credentials provider: Supabase tokens don't auto-refresh — acceptable for concept
+- API gateway: no code change needed; JWK URI overridden via SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI env var in docker-compose
+- docker-compose entrypoints updated to wait for postgres_app_db:5432 instead of mysql_core_db:3306
+
+
+================================================================================
+BUILD VERIFICATION
+================================================================================
+Command     : ./gradlew clean build (run per service)
+Run at      : 2026-07-23 14:31
+Result      : PASS — all 4 affected services pass
+Output notes: Pre-existing test bugs fixed: FundTransferRequest constructor mismatch
+              in TransactionServiceTest, null collection NPE in BaseMapper
+================================================================================
+
+================================================================================
+COMPLETION
+================================================================================
+STATUS      : COMPLETE
+Started at  : 2026-07-23 14:16
+Completed at: 2026-07-23 14:31
+Notes       :
+================================================================================

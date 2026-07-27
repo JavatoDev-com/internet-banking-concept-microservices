@@ -44,7 +44,7 @@ dependencies {
     //SWAGGER
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0'
 
-    implementation 'com.mysql:mysql-connector-j:8.4.0'
+    implementation 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 

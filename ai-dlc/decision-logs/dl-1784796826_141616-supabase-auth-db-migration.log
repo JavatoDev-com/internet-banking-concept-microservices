@@ -1,0 +1,132 @@
+================================================================================
+DECISION LOG
+================================================================================
+File        : dl-1784796826_141616-supabase-auth-db-migration.log
+Author      : chindin99x
+Date        : 2026-07-23 14:16
+Related Task: task-1784796826_141616-supabase-auth-db-migration.log
+================================================================================
+
+PURPOSE
+-------
+Migrate authentication from Keycloak to Supabase Auth, and migrate the
+application database from MySQL to PostgreSQL (Supabase PostgreSQL).
+
+Current state:
+- Keycloak 23.0.7 handles OAuth2/JWT for the API gateway and user management
+- MySQL 8.4.0 is used by all four data services
+- Flyway MySQL migrations manage the core-banking-service schema
+
+Target state:
+- Supabase Auth provides JWT tokens (RS256) and user management admin API
+- PostgreSQL (Supabase-hosted or self-hosted) replaces MySQL for all services
+- Flyway PostgreSQL migrations manage the core-banking-service schema
+- Frontend uses Supabase email/password credentials via NextAuth instead of Keycloak SSO redirect
+
+QUESTIONS & ANSWERS
+-------------------
+No blocking questions — scope is clear from codebase analysis and user request.
+
+DECISIONS MADE
+--------------
+1. Replace keycloak-admin-client with direct HTTP calls to Supabase Admin Auth API
+   using Spring's RestClient (available in Spring Boot 3.2) — no new dependency needed.
+
+2. Replace MySQL connector with PostgreSQL driver (org.postgresql:postgresql) in all
+   four data services. Spring Boot BOM manages the version.
+
+3. Remove flyway-mysql from core-banking-service; flyway-core supports PostgreSQL natively.
+   Rewrite existing Flyway SQL migrations to PostgreSQL syntax (BIGSERIAL, no backtick
+   quoting, standard FK constraints).
+
+4. Keep NextAuth in the frontend but replace KeycloakProvider with a Credentials
+   provider that calls supabase.auth.signInWithPassword(). This keeps all
+   useSession() usages intact without component rewrites.
+
+5. Add @supabase/supabase-js to the frontend — used in auth.ts credentials authorize().
+
+6. Docker-compose: remove keycloak_web, keycloakdb, mysql_core_db; add a local
+   PostgreSQL 15 container (postgres_app_db) for local development. Services receive
+   datasource and Supabase config via environment variables which override Config Server.
+
+7. API gateway JWT validation is config-only: the property
+   spring.security.oauth2.resourceserver.jwt.jwk-set-uri is overridden via env var
+   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI pointing to
+   {SUPABASE_URL}/auth/v1/.well-known/jwks.json. No code change in SecurityConfiguration.
+
+8. User account creation flow: create Supabase user with email_confirm: false (pending).
+   On APPROVED status update, call Supabase admin API to set email_confirm: true
+   (mirrors Keycloak enabled: false → enabled: true flow).
+
+ALTERNATIVES CONSIDERED
+-----------------------
+- Self-hosted Supabase (docker): More portable but requires 20+ containers; out of scope
+  for a concept project migration. Using cloud Supabase + local postgres for dev.
+- Replace NextAuth entirely with @supabase/auth-helpers-nextjs: Requires rewriting all
+  page components that use useSession() — too disruptive for this migration.
+- Use Spring WebClient instead of RestClient: Both are reactive, but RestClient is the
+  recommended synchronous HTTP client in Spring Boot 3.2+; WebClient would require
+  extra unwrapping in a blocking context.
+- Use Feign client for Supabase Admin API: Possible but adds a new FeignClient interface
+  just for external auth calls; RestClient is simpler and already available.
+
+SCOPE OF CHANGES
+----------------
+Affected services: internet-banking-user-service, core-banking-service,
+                   internet-banking-fund-transfer-service,
+                   internet-banking-utility-payment-service,
+                   internet-banking-api-gateway (config only),
+                   internet-banking-frontend
+Affected layers  : service, config, build (dependencies), DB migrations,
+                   docker-compose, frontend auth/login
+New endpoints    : none
+Schema changes   : Flyway migrations rewritten for PostgreSQL syntax (BIGSERIAL,
+                   standard constraints); no table/column renames
+New dependencies : @supabase/supabase-js (frontend npm); org.postgresql:postgresql
+                   (Java — replaces mysql-connector-j)
+Removed deps     : org.keycloak:keycloak-admin-client:24.0.4,
+                   com.mysql:mysql-connector-j:8.4.0 (all 4 services),
+                   org.flywaydb:flyway-mysql:10.12.0 (core-banking only),
+                   next-auth KeycloakProvider import (frontend)
+
+External config note: The Spring Cloud Config Server external repository
+(https://github.com/JavatoDev-com/internet-banking-microservices-configurations.git)
+also needs its datasource URLs and JWK URI updated. Docker-compose env var overrides
+remove this dependency for local/docker runs.
+
+RISKS & NOTES
+-------------
+- Supabase Admin API filter=email performs text search, not exact match; the service
+  layer does exact-match comparison after fetching results.
+- Flyway checksums: since we are migrating to a fresh PostgreSQL database, Flyway
+  history is empty and rewritten migration files run cleanly.
+- Token refresh: NextAuth credentials provider does not auto-refresh Supabase tokens.
+  For the concept project this is acceptable; production would use Supabase auth helpers
+  with proper PKCE + refresh handling.
+- PostgreSQL sequence reset: temp-data migration inserts with explicit IDs; sequence
+  is reset after the inserts so subsequent auto-increments work correctly.
+- Config Server: Services in docker-compose override config server values via
+  environment variables. Dev profile (bootstrap-dev.yml) still points to Config Server;
+  update those properties in the external repo for non-docker dev.
+
+ACCEPTANCE CRITERIA
+-------------------
+- [x] internet-banking-user-service: KeycloakManager, KeycloakProperties,
+      KeycloakUserService removed; SupabaseProperties and SupabaseAuthService in place
+- [x] internet-banking-user-service: build passes (./gradlew clean build)
+- [x] core-banking-service: MySQL driver replaced with PostgreSQL; flyway-mysql removed;
+      all 3 Flyway SQL migrations rewritten in PostgreSQL syntax; build passes
+- [x] internet-banking-fund-transfer-service: MySQL driver replaced; build passes
+- [x] internet-banking-utility-payment-service: MySQL driver replaced; build passes
+- [x] docker-compose: keycloak_web, keycloakdb, mysql_core_db removed; postgres_app_db
+      added with init.sql creating all 4 databases; services receive PostgreSQL
+      datasource and Supabase env vars
+- [x] Frontend: login page shows email/password form; auth.ts uses Supabase credentials
+      provider; .env.local updated with Supabase vars; @supabase/supabase-js in package.json
+- [x] API gateway: JWK URI override documented and configured via env var in docker-compose
+
+
+================================================================================
+AMENDMENTS (added during or after implementation)
+================================================================================
+================================================================================
